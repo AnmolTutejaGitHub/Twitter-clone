@@ -5,6 +5,7 @@ const cors = require('cors');
 const socketio = require('socket.io');
 const app = express();
 require('../Database/mongoose');
+const User = require('../Database/Models/User');
 
 app.use(cors({
     origin: `http://localhost:3000`,
