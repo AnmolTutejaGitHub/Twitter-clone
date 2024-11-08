@@ -4,6 +4,9 @@ const TweetSchema = new mongoose.Schema({
     name: {
         type: String,
     },
+    user_id: {
+        type: String
+    },
     content: {
         type: String
     },
@@ -16,6 +19,10 @@ const TweetSchema = new mongoose.Schema({
         default: Date.now
     },
     likes: {
+        type: Number,
+        default: 0
+    },
+    reTweetes: {
         type: Number,
         default: 0
     }

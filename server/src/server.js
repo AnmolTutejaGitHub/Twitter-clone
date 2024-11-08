@@ -109,7 +109,8 @@ app.post('/tweet', async (req, res) => {
 
     const tweet = new Tweet({
         name: username,
-        content: content
+        content: content,
+        user_id: user._id
     })
     await tweet.save();
     user.tweets.push(tweet._id.toString());
@@ -259,6 +260,58 @@ app.post('/userlikes', async (req, res) => {
         }
     }));
     res.status(200).send({ tweets, replies });
+})
+
+
+app.post('/followAccount', async (req, res) => {
+    const { username, creator } = req.body;
+    const user = await User.findOne({ name: username });
+    const Creator = await User.findOne({ name: creator });
+    user.following.push(Creator._id);
+    Creator.followers.push(user._id);
+    await user.save();
+    await Creator.save();
+    res.status(200).send("Followed");
+})
+
+
+app.post('/getFollowingTweets', async (req, res) => {
+    const { username } = req.body;
+    const user = await User.findOne({ name: username });
+
+    const followedAccounts_ids = user.following;
+
+    const folowingTweets = await Tweet.find({
+        user_id: { $in: followedAccounts_ids },
+    }).sort({ createdAt: -1 });
+
+    res.status(200).send(folowingTweets);
+})
+
+app.post('/addBookmark', async (req, res) => {
+    const { username, tweet_id } = req.body;
+    const user = await User.findOne({ name: username });
+    user.bookmarks.push(tweet_id);
+    await user.save();
+    res.status(200).send(user);
+})
+
+app.post('/getBookmarkedTweets', async (req, res) => {
+    const { username } = req.body;
+    const user = await User.findOne({ name: username });
+    const allTweets = await Tweet.find({});
+    const bookmarkedTweets = allTweets.filter(tweet => user.bookmarks.includes(tweet._id));
+    res.status(200).send(bookmarkedTweets);
+})
+
+app.post('/retweet', async (req, res) => {
+    const { username, tweet_id } = req.body;
+    const user = await User.findOne({ name: username });
+    user.reTweeted.push({
+        tweet_id: tweet_id
+    });
+    await user.save();
+    res.status(200).send(user);
 })
 
 const io = socketio(server, {

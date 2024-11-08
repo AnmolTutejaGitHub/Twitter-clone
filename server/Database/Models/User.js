@@ -51,7 +51,19 @@ const UserSchema = new mongoose.Schema({
         default: Date.now
     },
     tweets: [String], // id
-    likes: [String]
+    likes: [String],
+    bookmarks: [String],
+    reTweeted: [
+        {
+            tweet_id: {
+                type: String,
+            },
+            reTweetedAt: {
+                type: Date,
+                default: Date.now
+            }
+        }
+    ]
 })
 
 UserSchema.pre('save', async function (next) {
