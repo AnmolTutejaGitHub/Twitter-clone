@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
-const TweetSchema = require('./Tweet');
 
 
 const UserSchema = new mongoose.Schema({
@@ -51,7 +50,8 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    tweets: [TweetSchema]
+    tweets: [String], // id
+    likes: [String]
 })
 
 UserSchema.pre('save', async function (next) {

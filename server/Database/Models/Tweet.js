@@ -1,14 +1,16 @@
 const mongoose = require("mongoose");
-const ReplySchema = require('../Models/Replies');
 
 const TweetSchema = new mongoose.Schema({
+    name: {
+        type: String,
+    },
     content: {
         type: String
     },
     media: {
         type: String
     },
-    replies: [ReplySchema],
+    replies: [String],
     createdAt: {
         type: Date,
         default: Date.now
@@ -19,4 +21,5 @@ const TweetSchema = new mongoose.Schema({
     }
 })
 
-module.exports = TweetSchema;
+const Tweet = mongoose.model('Tweet', TweetSchema);
+module.exports = Tweet;

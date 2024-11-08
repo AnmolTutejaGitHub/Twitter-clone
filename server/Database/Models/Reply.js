@@ -8,10 +8,15 @@ const ReplySchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    replies: [this],
+    replies: [String], // reply_id
     likes: {
         type: String
-    }
+    },
+    content: {
+        type: String
+    },
+    parent_id: [String]
 })
 
-module.exports = ReplySchema;
+const Reply = mongoose.model('Reply', ReplySchema);
+module.exports = Reply;

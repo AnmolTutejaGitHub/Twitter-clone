@@ -5,7 +5,7 @@ const UserContext = createContext();
 
 function Provider({ children }) {
     const [user, setUser] = useState(() => {
-        return sessionStorage.getItem('user') || null;
+        return sessionStorage.getItem('user') || 'Anmol';
     });
 
     const [loading, setloading] = useState(true);
@@ -23,9 +23,9 @@ function Provider({ children }) {
         setloading(false);
     }
 
-    // useEffect(() => {
-    //     decodeToken();
-    // }, [])
+    useEffect(() => {
+        decodeToken();
+    }, [])
 
     useEffect(() => {
         if (user) {
