@@ -215,7 +215,7 @@ app.post('/like', async (req, res) => {
         }
 
         if (reply_id) {
-            const reply = await Reply.findById(reply_id_id);
+            const reply = await Reply.findById(reply_id);
             if (!reply) return res.status(400).send({ message: "Reply deleted" });
             reply.likes += 1;
             await reply.save();
@@ -226,6 +226,39 @@ app.post('/like', async (req, res) => {
     } catch (e) {
         res.status(500).send(e);
     }
+})
+
+app.get('/alltweets', async (req, res) => {
+    const tweets = await Tweet.find({});
+    res.status(200).send(tweets);
+})
+
+app.post('/usertweets', async (req, res) => {
+    const { username } = req.body;
+    const tweets = await Tweet.find({ name: username });
+    res.status(200).send(tweets);
+})
+
+app.post('/userlikes', async (req, res) => {
+    const { username } = req.body;
+    const user = await User.findOne({ name: username });
+    const likes = user.likes;
+
+    const tweets = [];
+    const replies = [];
+
+    await Promise.all(likes.map(async (id) => {
+        const tweet = await Tweet.findById(id);
+        if (tweet) {
+            tweets.push(tweet);
+        } else {
+            const reply = await Reply.findById(id);
+            if (reply) {
+                replies.push(reply);
+            }
+        }
+    }));
+    res.status(200).send({ tweets, replies });
 })
 
 const io = socketio(server, {
