@@ -3,8 +3,11 @@ import { FaRetweet } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa6";
 import { IoShareSocialOutline } from "react-icons/io5";
 import { CiBookmark } from "react-icons/ci";
+import { useNavigate } from 'react-router-dom';
 
 function Post({ tweet }) {
+
+    const navigate = useNavigate();
 
     function formatTime(createdTime) {
         const currTime = new Date();
@@ -26,7 +29,7 @@ function Post({ tweet }) {
     }
 
 
-    return (<div className="flex flex-col gap-3 p-3 border-[1px] border-[#2F3336]">
+    return (<div className="flex flex-col gap-3 p-3 border-[1px] border-[#2F3336]" onClick={() => navigate('/home/tweet', { state: { tweet } })}>
         <div className='flex gap-2'>
             <img src={`https://ui-avatars.com/api/?name=${tweet.name}`} className='rounded-full h-8' />
             <div className="flex gap-1">
@@ -41,11 +44,22 @@ function Post({ tweet }) {
         </div>
 
         <div className="flex justify-around text-[#71767A]">
-            <FaRegComment />
-            <FaRetweet />
-            <FaRegHeart />
-            <CiBookmark />
-            <IoShareSocialOutline />
+            <div className="flex items-center gap-1 hover:text-sky-500">
+                <FaRegComment />
+                {tweet.replies.length > 0 && tweet.replies.length}
+            </div>
+            <div className="flex items-center gap-1 hover:text-green-500">
+                <FaRetweet />
+            </div>
+            <div className="flex items-center gap-1 hover:text-red-500">
+                <FaRegHeart />
+            </div>
+            <div className="flex items-center gap-1 hover:text-sky-500">
+                <CiBookmark />
+            </div>
+            <div className="flex items-center gap-1 hover:text-sky-500">
+                <IoShareSocialOutline />
+            </div>
         </div>
     </div>)
 }
