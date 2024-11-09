@@ -314,6 +314,14 @@ app.post('/retweet', async (req, res) => {
     res.status(200).send(user);
 })
 
+app.post('/tweetReplies', async (req, res) => {
+    const { tweet_id } = req.body;
+    const tweet = await Tweet.findById(tweet_id);
+    if (!tweet) return res.status(400).send("no tweet found")
+    const replies = await Reply.find({ parent_id: tweet._id });
+    return res.status(200).send(replies);
+})
+
 const io = socketio(server, {
     cors: {
         origin: `http://localhost:3000`,

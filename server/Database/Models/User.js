@@ -41,6 +41,9 @@ const UserSchema = new mongoose.Schema({
     profilePic: {
         type: String
     },
+    backdropPic: {
+        type: String
+    },
     followers: [String],
     following: [String],
     bio: {
@@ -63,7 +66,11 @@ const UserSchema = new mongoose.Schema({
                 default: Date.now
             }
         }
-    ]
+    ],
+    isVerified: {
+        type: Boolean,
+        default: false
+    }
 })
 
 UserSchema.pre('save', async function (next) {

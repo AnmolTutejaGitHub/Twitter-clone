@@ -5,7 +5,7 @@ const UserContext = createContext();
 
 function Provider({ children }) {
     const [user, setUser] = useState(() => {
-        return sessionStorage.getItem('user') || 'Anmol';
+        return sessionStorage.getItem('user') || "Anmol";
     });
 
     const [loading, setloading] = useState(true);
@@ -13,7 +13,7 @@ function Provider({ children }) {
     async function decodeToken() {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/verifytokenAndGetUsername`, {
+            const response = await axios.post(`http://localhost:6969/verifytokenAndGetUsername`, {
                 token: token
             });
             if (response.status === 200) setUser(response.data.user);

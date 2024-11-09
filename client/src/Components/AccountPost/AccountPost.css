@@ -1,0 +1,13 @@
+.user-post {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12.5px);
+    -webkit-backdrop-filter: blur(12.5px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding-top: 1rem;
+    position: fixed;
+    width: 50%;
+}
+
+.user-name-top {
+    font-size: 20px;
+}
