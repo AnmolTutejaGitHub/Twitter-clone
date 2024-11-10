@@ -5,6 +5,7 @@ import AccountPost from '../AccountPost/AccountPost';
 import DM from '../DM';
 import Tweet from '../Tweet';
 import Profile from '../Profile';
+import ReplyAsTweet from '../ReplyAsTweet';
 import './Home.css';
 
 function Home() {
@@ -22,6 +23,7 @@ function Home() {
                     <Route path='AccountPost' element={<AccountPost />} />
                     <Route path="tweet" element={<Tweet />} />
                     <Route path="profile" element={<Profile />} />
+                    <Route path="reply" element={< ReplyAsTweet />} />
                 </Routes>
             </div>
 

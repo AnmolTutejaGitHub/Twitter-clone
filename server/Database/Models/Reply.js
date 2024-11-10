@@ -15,7 +15,11 @@ const ReplySchema = new mongoose.Schema({
     content: {
         type: String
     },
-    parent_id: [String]
+    parent_id: [String],
+    likes: {
+        type: Number,
+        default: 0
+    }
 })
 
 const Reply = mongoose.model('Reply', ReplySchema);

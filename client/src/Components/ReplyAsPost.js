@@ -1,31 +1,21 @@
-import { useState, useEffect } from "react";
-import axios from 'axios';
 import { FaRegComment } from "react-icons/fa6";
 import { FaRetweet } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa6";
 import { IoShareSocialOutline } from "react-icons/io5";
 import { CiBookmark } from "react-icons/ci";
-import { IoMdHeart } from "react-icons/io";
+import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import UserContext from '../Context/UserContext';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useState } from "react";
+import { IoMdHeart } from "react-icons/io";
+import { useEffect } from "react";
 
+function ReplyAsPost({ reply }) {
 
-function Reply({ reply }) {
-    const [replierObj, setReplierObj] = useState({});
-    const [isLiked, setLiked] = useState(false);
-    const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
-    async function getReplier(replier) {
-        const response = await axios.post('http://localhost:6969/getUser', {
-            username: replier
-        })
-        setReplierObj(response.data);
-    }
-
-    useEffect(() => {
-        getReplier(reply.name);
-    }, [])
+    const { user, setUser } = useContext(UserContext);
+    const [isLiked, setLiked] = useState(false);
 
     function formatTime(createdTime) {
         const currTime = new Date();
@@ -45,6 +35,7 @@ function Reply({ reply }) {
             });
         }
     }
+
 
     async function LikeThePost() {
         const response = await axios.post('http://localhost:6969/like', {
@@ -79,12 +70,13 @@ function Reply({ reply }) {
     }, [])
 
 
+
     return (<div className="flex flex-col gap-3 p-3 border-[1px] border-[#2F3336]" onClick={() => navigate('/home/reply', { state: { reply } })}>
         <div className='flex gap-2'>
             <img src={`https://ui-avatars.com/api/?name=${reply.name}`} className='rounded-full h-8' />
             <div className="flex gap-1">
                 <p>{reply.name}</p>
-                <p className='text-[#71767A] text-sm'>@{replierObj._id}</p>
+                <p className='text-[#71767A] text-sm'>@{reply.user_id}</p>
                 <p className="text-[#71767A] text-sm">. {formatTime(reply.createdAt)}</p>
             </div>
         </div>
@@ -124,4 +116,4 @@ function Reply({ reply }) {
         </div>
     </div>)
 }
-export default Reply;
+export default ReplyAsPost;

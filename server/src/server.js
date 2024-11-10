@@ -359,6 +359,14 @@ app.post('/tweetReplies', async (req, res) => {
     return res.status(200).send(replies);
 })
 
+app.post('/replyReplies', async (req, res) => {
+    const { reply_id } = req.body;
+    const reply = await Reply.findById(reply_id);
+    if (!reply) return res.status(400).send("reply has been deleted");
+    const replies = await Reply.find({ parent_id: reply._id });
+    return res.status(200).send(replies);
+})
+
 
 app.post('/wasTweetLiked', async (req, res) => {
     const { username, post_id } = req.body;
