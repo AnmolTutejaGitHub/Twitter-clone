@@ -27,7 +27,7 @@ function Tweet() {
 
     useEffect(() => {
         getReplies();
-    }, [])
+    }, [replies])
 
     const renderReplies = replies.map((reply) => {
         return <Reply reply={reply} />

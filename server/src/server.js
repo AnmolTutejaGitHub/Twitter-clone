@@ -123,12 +123,14 @@ app.post('/addTweetreply', async (req, res) => {
 
     try {
         const tweet = await Tweet.findById(tweet_id);
+        const user = await User.findOne({ name: username });
         if (!tweet) return res.status(400).send("Tweet is deleted by the author");
 
         const reply = new Reply({
             name: username,
             content: content,
-            parent_id: tweet_id
+            parent_id: tweet_id,
+            user_id: user._id
         })
         await reply.save();
         tweet.replies.push(reply._id);
@@ -147,10 +149,12 @@ app.post('/addReplyReply', async (req, res) => {
         const parent_reply = await Reply.findById(reply_id);
         if (!parent_reply) return res.status(400).send("Reply has been deleted");
 
+        const user = await User.findOne({ name: username });
         const reply = new Reply({
             name: username,
             content: content,
-            parent_id: reply_id
+            parent_id: reply_id,
+            user_id: user.id
         })
         await reply.save();
         parent_reply.replies.push(reply._id);
