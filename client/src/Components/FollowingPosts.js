@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import UserContext from '../Context/UserContext';
-import Post from './Post/Post';
+import Post from './Post';
 import { useState } from 'react';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';

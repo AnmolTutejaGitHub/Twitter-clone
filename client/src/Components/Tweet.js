@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Post from "./Post/Post";
+import Post from "./Post";
 import axios from 'axios';
 import Reply from "./Reply";
 import { useLocation } from 'react-router-dom';

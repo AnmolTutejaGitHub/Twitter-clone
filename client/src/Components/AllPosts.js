@@ -1,8 +1,8 @@
-import Post from '../Post/Post';
+import Post from './Post';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useContext } from 'react';
-import UserContext from '../../Context/UserContext';
+import UserContext from '../Context/UserContext';
 import toast, { Toaster } from 'react-hot-toast';
 
 

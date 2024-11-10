@@ -1,8 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
-import SideBar from '../SideBar/SideBar';
+import SideBar from '../SideBar';
 import Posts from '../Posts';
 import AccountPost from '../AccountPost/AccountPost';
-import DM from '../DM/DM';
+import DM from '../DM';
 import Tweet from '../Tweet';
 import Profile from '../Profile';
 import './Home.css';

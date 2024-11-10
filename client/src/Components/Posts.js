@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import AllPosts from './Posts/AllPosts';
+import AllPosts from './AllPosts';
 import FollowingPosts from './FollowingPosts';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';

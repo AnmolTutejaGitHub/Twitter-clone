@@ -5,7 +5,7 @@ import { IoShareSocialOutline } from "react-icons/io5";
 import { CiBookmark } from "react-icons/ci";
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
-import UserContext from '../../Context/UserContext';
+import UserContext from '../Context/UserContext';
 import axios from 'axios';
 import { useState } from "react";
 import { IoMdHeart } from "react-icons/io";
