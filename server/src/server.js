@@ -208,21 +208,58 @@ app.post('/like', async (req, res) => {
         if (tweet_id) {
             const tweet = await Tweet.findById(tweet_id);
             if (!tweet) return res.status(400).send({ message: "Tweet deleted" });
-            tweet.likes += 1;
-            await tweet.save();
-            user.likes.push(tweet_id);
-            await user.save();
+            if (!user.likes.includes(tweet_id)) {
+                tweet.likes += 1;
+                await tweet.save();
+                user.likes.push(tweet_id);
+                await user.save();
+            }
             return res.status(200).send({ message: "Tweet liked" });
         }
 
         if (reply_id) {
             const reply = await Reply.findById(reply_id);
             if (!reply) return res.status(400).send({ message: "Reply deleted" });
-            reply.likes += 1;
-            await reply.save();
-            user.likes.push(reply_id);
-            await user.save();
+            if (!user.likes.includes(reply_id)) {
+                reply.likes += 1;
+                await reply.save();
+                user.likes.push(reply_id);
+                await user.save();
+            }
             return res.status(200).send({ message: "Reply liked" });
+        }
+    } catch (e) {
+        res.status(500).send(e);
+    }
+})
+
+app.post('/unlike', async (req, res) => {
+    const { reply_id, tweet_id, username } = req.body;
+    try {
+        const user = await User.findOne({ name: username });
+
+        if (tweet_id) {
+            const tweet = await Tweet.findById(tweet_id);
+            if (!tweet) return res.status(400).send({ message: "Tweet deleted" });
+            if (user.likes.includes(tweet_id)) {
+                tweet.likes -= 1;
+                await tweet.save();
+                user.likes = user.likes.filter(id => id !== tweet_id);
+                await user.save();
+            }
+            return res.status(200).send({ message: "Tweet unliked" });
+        }
+
+        if (reply_id) {
+            const reply = await Reply.findById(reply_id);
+            if (!reply) return res.status(400).send({ message: "Reply deleted" });
+            if (user.likes.includes(reply_id)) {
+                reply.likes -= 1;
+                await reply.save();
+                user.likes = user.likes.filter(id => id !== reply_id);
+                await user.save();
+            }
+            return res.status(200).send({ message: "Reply unliked" });
         }
     } catch (e) {
         res.status(500).send(e);
@@ -320,6 +357,14 @@ app.post('/tweetReplies', async (req, res) => {
     if (!tweet) return res.status(400).send("no tweet found")
     const replies = await Reply.find({ parent_id: tweet._id });
     return res.status(200).send(replies);
+})
+
+
+app.post('/wasTweetLiked', async (req, res) => {
+    const { username, post_id } = req.body;
+    const user = await User.findOne({ name: username });
+    if (user.likes.includes(post_id)) return res.status(200).send("Liked");
+    res.status(400).send("Not Liked");
 })
 
 const io = socketio(server, {

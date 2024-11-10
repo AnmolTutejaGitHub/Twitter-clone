@@ -4,10 +4,18 @@ import { FaRegHeart } from "react-icons/fa6";
 import { IoShareSocialOutline } from "react-icons/io5";
 import { CiBookmark } from "react-icons/ci";
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import UserContext from '../../Context/UserContext';
+import axios from 'axios';
+import { useState } from "react";
+import { IoMdHeart } from "react-icons/io";
+import { useEffect } from "react";
 
 function Post({ tweet }) {
 
     const navigate = useNavigate();
+    const { user, setUser } = useContext(UserContext);
+    const [isLiked, setLiked] = useState(false);
 
     function formatTime(createdTime) {
         const currTime = new Date();
@@ -27,6 +35,40 @@ function Post({ tweet }) {
             });
         }
     }
+
+
+    async function LikeThePost() {
+        const response = await axios.post('http://localhost:6969/like', {
+            tweet_id: tweet._id,
+            username: user
+        });
+        setLiked(true);
+        tweet.likes += 1;
+    }
+
+    async function unLikeThePost() {
+        const response = await axios.post('http://localhost:6969/unlike', {
+            tweet_id: tweet._id,
+            username: user
+        });
+        setLiked(false);
+        tweet.likes -= 1;
+    }
+
+    async function wasPostLiked() {
+        try {
+            const response = await axios.post('http://localhost:6969/wasTweetLiked', {
+                post_id: tweet._id,
+                username: user
+            })
+            if (response.status == 200) setLiked(true);
+        } catch (e) { }
+    }
+
+    useEffect(() => {
+        wasPostLiked();
+    }, [])
+
 
 
     return (<div className="flex flex-col gap-3 p-3 border-[1px] border-[#2F3336]" onClick={() => navigate('/home/tweet', { state: { tweet } })}>
@@ -51,8 +93,19 @@ function Post({ tweet }) {
             <div className="flex items-center gap-1 hover:text-green-500">
                 <FaRetweet />
             </div>
-            <div className="flex items-center gap-1 hover:text-red-500">
-                <FaRegHeart />
+            <div className="flex items-center gap-1 hover:text-red-500" >
+                {!isLiked &&
+                    <>
+                        <FaRegHeart onClick={(e) => { e.stopPropagation(e); LikeThePost() }} />
+                        {tweet.likes > 0 && tweet.likes}
+                    </>
+                }
+                {isLiked &&
+                    <>
+                        <IoMdHeart className="text-red-500" onClick={(e) => { e.stopPropagation(e); unLikeThePost() }} />
+                        <div className="text-red-500">{tweet.likes}</div>
+                    </>
+                }
             </div>
             <div className="flex items-center gap-1 hover:text-sky-500">
                 <CiBookmark />
