@@ -73,7 +73,7 @@ function Post({ tweet }) {
 
     return (<div className="flex flex-col gap-3 p-3 border-[1px] border-[#2F3336]" onClick={() => navigate('/home/tweet', { state: { tweet } })}>
         <div className='flex gap-2'>
-            <img src={`https://ui-avatars.com/api/?name=${tweet.name}`} className='rounded-full h-8' />
+            <img src={`https://ui-avatars.com/api/?name=${tweet.name}`} className='rounded-full h-8' onClick={(e) => { e.stopPropagation(); navigate('/home/profile', { state: { user: tweet.name } }) }} />
             <div className="flex gap-1">
                 <p>{tweet.name}</p>
                 <p className='text-[#71767A] text-sm'>@{tweet.user_id}</p>

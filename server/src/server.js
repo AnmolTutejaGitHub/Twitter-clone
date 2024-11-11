@@ -280,6 +280,12 @@ app.post('/usertweets', async (req, res) => {
     const tweets = await Tweet.find({ name: username });
     res.status(200).send(tweets);
 })
+app.post('/userReplies', async (req, res) => {
+    const { username } = req.body;
+    const replies = await Reply.find({ name: username });
+    res.status(200).send(replies);
+})
+
 
 app.post('/userlikes', async (req, res) => {
     const { username } = req.body;
@@ -308,11 +314,39 @@ app.post('/followAccount', async (req, res) => {
     const { username, creator } = req.body;
     const user = await User.findOne({ name: username });
     const Creator = await User.findOne({ name: creator });
-    user.following.push(Creator._id);
-    Creator.followers.push(user._id);
+    user.following.push(Creator._id.toString());
     await user.save();
+    Creator.followers.push(user._id.toString());
     await Creator.save();
     res.status(200).send("Followed");
+})
+
+app.post('/unfollowAccount', async (req, res) => {
+    const { username, creator } = req.body;
+    const user = await User.findOne({ name: username });
+    const Creator = await User.findOne({ name: creator });
+
+    user.following = user.following.filter(id => id !== Creator._id.toString());
+    await user.save();
+    Creator.followers = Creator.followers.filter(id => id !== user._id.toString());
+    await Creator.save();
+    res.status(200).send("Unfollowed");
+})
+
+app.post('/isFollowed', async (req, res) => {
+    const { username, creator } = req.body;
+    const user = await User.findOne({ name: username });
+    const Creator = await User.findOne({ name: creator });
+
+    const isFollowing = user.following.includes(Creator._id.toString());
+    if (isFollowing) res.status(200).send("following");
+    else res.status(404).send('not following');
+})
+
+app.post('/getFollowersFollowing', async (req, res) => {
+    const { username } = req.body;
+    const user = await User.findOne({ name: username });
+    res.status(200).send({ followers: user.followers, following: user.following });
 })
 
 
@@ -377,6 +411,19 @@ app.post('/wasTweetLiked', async (req, res) => {
     const user = await User.findOne({ name: username });
     if (user.likes.includes(post_id)) return res.status(200).send("Liked");
     res.status(400).send("Not Liked");
+})
+
+app.post('/findParentPost', async (req, res) => {
+    const { parent_id } = req.body;
+    const tweet = await Tweet.findById(parent_id);
+    if (tweet) {
+        return res.status(200).send({ type: "tweet", tweet });
+    }
+    const reply = await Reply.findById(parent_id);
+    if (reply) {
+        return res.status(200).send({ type: "reply", reply });
+    }
+    res.status(404).send({ message: "Not found" });
 })
 
 const io = socketio(server, {

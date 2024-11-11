@@ -78,16 +78,31 @@ function Reply({ reply }) {
         wasPostLiked();
     }, [])
 
+    async function GoToParentPost(parent_id) {
+        try {
+            const response = await axios.post('http://localhost:6969/findParentPost', {
+                parent_id: parent_id
+            })
+            if (response.status == 200) {
+                if (response.data.type == 'tweet') navigate('/home/tweet', { state: { tweet: response.data.tweet } });
+                if (response.data.type == 'reply') navigate('/home/reply', { state: { reply: response.data.reply } });
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
 
     return (<div className="flex flex-col gap-3 p-3 border-[1px] border-[#2F3336]" onClick={() => navigate('/home/reply', { state: { reply } })}>
         <div className='flex gap-2'>
-            <img src={`https://ui-avatars.com/api/?name=${reply.name}`} className='rounded-full h-8' />
+            <img src={`https://ui-avatars.com/api/?name=${reply.name}`} className='rounded-full h-8' onClick={(e) => { e.stopPropagation(); navigate('/home/profile', { state: { user: reply.name } }) }} />
             <div className="flex gap-1">
                 <p>{reply.name}</p>
                 <p className='text-[#71767A] text-sm'>@{replierObj._id}</p>
                 <p className="text-[#71767A] text-sm">. {formatTime(reply.createdAt)}</p>
             </div>
         </div>
+        <div className="text-[13px] text-blue-500" onClick={(e) => { e.stopPropagation(); GoToParentPost(reply.parent_id) }}>replying to post id: {reply.parent_id}</div>
 
         <div>
             <p className="">{reply.content}</p>
