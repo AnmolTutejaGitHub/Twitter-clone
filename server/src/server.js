@@ -364,19 +364,57 @@ app.post('/getFollowingTweets', async (req, res) => {
 })
 
 app.post('/addBookmark', async (req, res) => {
-    const { username, tweet_id } = req.body;
+    const { username, tweet_id, reply_id } = req.body;
     const user = await User.findOne({ name: username });
-    user.bookmarks.push(tweet_id);
+    if (tweet_id) user.bookmarks.push(tweet_id);
+    if (reply_id) user.bookmarks.push(reply_id);
     await user.save();
     res.status(200).send(user);
 })
 
-app.post('/getBookmarkedTweets', async (req, res) => {
+app.post('/getBookmarks', async (req, res) => {
     const { username } = req.body;
     const user = await User.findOne({ name: username });
-    const allTweets = await Tweet.find({});
-    const bookmarkedTweets = allTweets.filter(tweet => user.bookmarks.includes(tweet._id));
-    res.status(200).send(bookmarkedTweets);
+    res.status(200).send(user.bookmarks);
+})
+
+app.post('/deleteBookmark', async (req, res) => {
+    const { username, tweet_id, reply_id } = req.body;
+    const user = await User.findOne({ name: username });
+    if (tweet_id) user.bookmarks.filter(id => id != tweet_id.toString());
+    if (reply_id) user.bookmarks.filter(id => id != reply_id.toString());
+    await user.save();
+    res.status(200).send("Removed From Bookmark")
+})
+
+app.post('/isBookedmark', async (req, res) => {
+    const { username, tweet_id, reply_id } = req.body;
+    const user = await User.findOne({ name: username });
+
+    if (tweet_id) {
+        const isBookmarked = user.bookmarks.includes(tweet_id);
+        if (isBookmarked) return res.status(200).send("Bookedmarked");
+    }
+
+    if (reply_id) {
+        const isBookmarked = user.bookmarks.includes(reply_id);
+        if (isBookmarked) return res.status(200).send("Bookedmarked");
+    }
+
+    res.status(400).send("Not Booked marked");
+})
+
+app.post('/findTweetorReplyById', async (req, res) => {
+    const { id } = req.body;
+    const tweet = await Tweet.findById(id);
+    if (tweet) {
+        return res.status(200).send({ type: "tweet", tweet });
+    }
+    const reply = await Reply.findById(id);
+    if (reply) {
+        return res.status(200).send({ type: "reply", reply });
+    }
+    res.status(404).send({ message: "Not found" });
 })
 
 app.post('/retweet', async (req, res) => {

@@ -6,6 +6,7 @@ import ReplyAsPost from "./ReplyAsPost";
 import { useLocation } from "react-router-dom";
 import { useContext } from 'react';
 import UserContext from '../Context/UserContext';
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 function Profile() {
     const location = useLocation();
@@ -94,7 +95,8 @@ function Profile() {
     return (<div>
         <div>
             <div className=" p-3 fixed ">
-                <div className="flex gap-10">
+                <div className="flex gap-10 align-center">
+                    <IoMdArrowRoundBack onClick={() => window.history.back()} />
                     <div>{user_}</div>
                     {!Following && user != user_ && <button onClick={followHim}>Follow</button>}
                     {Following && user != user_ && <button onClick={unfollowHim}>Following</button>}

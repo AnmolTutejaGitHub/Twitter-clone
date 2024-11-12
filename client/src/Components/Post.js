@@ -10,12 +10,14 @@ import axios from 'axios';
 import { useState } from "react";
 import { IoMdHeart } from "react-icons/io";
 import { useEffect } from "react";
+import { IoMdBookmark } from "react-icons/io";
 
 function Post({ tweet }) {
 
     const navigate = useNavigate();
     const { user, setUser } = useContext(UserContext);
     const [isLiked, setLiked] = useState(false);
+    const [isBookmarked, setIsBookmarked] = useState(false);
 
     function formatTime(createdTime) {
         const currTime = new Date();
@@ -65,8 +67,40 @@ function Post({ tweet }) {
         } catch (e) { }
     }
 
+    async function BookmarkTweet(e) {
+        e.stopPropagation();
+        const response = await axios.post(`http://localhost:6969/addBookmark`, {
+            username: user,
+            tweet_id: tweet._id
+        })
+        setIsBookmarked(true);
+    }
+
+    async function unBookmarkTweet(e) {
+        e.stopPropagation();
+        const response = await axios.post(`http://localhost:6969/deleteBookmark`, {
+            username: user,
+            tweet_id: tweet._id
+        })
+        setIsBookmarked(false);
+    }
+
+    async function isBookedmarked() {
+        try {
+            const response = await axios.post(`http://localhost:6969/isBookedmark`, {
+                username: user,
+                tweet_id: tweet._id
+            })
+            if (response.status == 200) setIsBookmarked(true);
+        } catch (e) {
+            console.log(e);
+        }
+
+    }
+
     useEffect(() => {
         wasPostLiked();
+        isBookedmarked();
     }, [])
 
 
@@ -107,8 +141,9 @@ function Post({ tweet }) {
                     </>
                 }
             </div>
-            <div className="flex items-center gap-1 hover:text-sky-500">
-                <CiBookmark />
+            <div className={"flex items-center gap-1 hover:text-sky-500"}>
+                {!isBookmarked && <CiBookmark onClick={(e) => BookmarkTweet(e)} />}
+                {isBookmarked && <IoMdBookmark onClick={(e) => unBookmarkTweet(e)} className="text-[#1C90DF]" />}
             </div>
             <div className="flex items-center gap-1 hover:text-sky-500">
                 <IoShareSocialOutline />

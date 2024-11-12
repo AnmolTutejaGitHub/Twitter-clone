@@ -30,7 +30,7 @@ function SideBar() {
                 Messages
             </div>
 
-            <div className="flex items-center pl-10 pt-5 pb-5 gap-3 hover:bg-[#181818] cursor-pointer">
+            <div className="flex items-center pl-10 pt-5 pb-5 gap-3 hover:bg-[#181818] cursor-pointer" onClick={() => navigate('/home/bookmarks')} >
                 <MdOutlineBookmarkBorder className="text-2xl" />
                 Bookmarks
             </div>
