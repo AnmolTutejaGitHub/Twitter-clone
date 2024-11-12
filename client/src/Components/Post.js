@@ -115,6 +115,9 @@ function Post({ tweet }) {
 
         <div>
             <p className="">{tweet.content}</p>
+            {tweet?.isQuote?._bool &&
+                <div className="text-blue-500 cursor-pointer text-[13px]" onClick={(e) => { e.stopPropagation(); navigate('/home/tweet', { state: { tweet: tweet.isQuote.parent } }) }}>Quote to post_id : {tweet.isQuote.parent._id}</div>
+            }
 
 
             {
@@ -144,7 +147,7 @@ function Post({ tweet }) {
                 <FaRegComment />
                 {tweet.replies.length > 0 && tweet.replies.length}
             </div>
-            <div className="flex items-center gap-1 hover:text-green-500">
+            <div className="flex items-center gap-1 hover:text-green-500" onClick={(e) => { e.stopPropagation(); navigate('/home/quote', { state: { tweet } }) }}>
                 <FaRetweet />
             </div>
             <div className="flex items-center gap-1 hover:text-red-500" >
@@ -169,6 +172,6 @@ function Post({ tweet }) {
                 <IoShareSocialOutline />
             </div>
         </div>
-    </div>)
+    </div >)
 }
 export default Post;

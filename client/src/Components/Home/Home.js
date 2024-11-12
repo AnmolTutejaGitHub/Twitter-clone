@@ -7,6 +7,7 @@ import Tweet from '../Tweet';
 import Profile from '../Profile';
 import ReplyAsTweet from '../ReplyAsTweet';
 import Bookmarks from '../Bookmarks';
+import Quote from '../Quote';
 import './Home.css';
 
 function Home() {
@@ -26,6 +27,7 @@ function Home() {
                     <Route path="profile" element={<Profile />} />
                     <Route path="reply" element={< ReplyAsTweet />} />
                     <Route path="bookmarks" element={< Bookmarks />} />
+                    <Route path="quote" element={<Quote />} />
                 </Routes>
             </div>
 

@@ -108,7 +108,7 @@ app.post('/otp', async (req, res) => {
 });
 
 app.post('/tweet', async (req, res) => {
-    const { username, content } = req.body;
+    const { username, content, isQuote } = req.body;
     const user = await User.findOne({ name: username });
 
     const tweet = new Tweet({
@@ -116,6 +116,8 @@ app.post('/tweet', async (req, res) => {
         content: content,
         user_id: user._id
     })
+
+    if (isQuote) tweet.isQuote = isQuote;
     await tweet.save();
     user.tweets.push(tweet._id.toString());
     await user.save();
@@ -491,6 +493,16 @@ app.post('/fileupload', upload.single('uploadfile'), async (req, res) => {
     await tweet.save();
     res.status(200).send({ message: 'File uploaded successfully!', url: tweet.fileURL });
 });
+
+
+app.post('/incQuote', async (req, res) => {
+    const { tweet_id, retweet_id } = req.body;
+    const tweet = await Tweet.findById(tweet_id);
+    tweet.reTweetes += 1;
+    tweet.reTweets_id.push(retweet_id);
+    await tweet.save();
+    res.status(200).send("retweeted/Quoted");
+})
 
 
 const io = socketio(server, {

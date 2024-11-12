@@ -28,7 +28,14 @@ const TweetSchema = new mongoose.Schema({
     },
     fileURL: {
         type: String
-    }
+    },
+    reTweets_id: [String],
+    isQuote: {
+        type: Object,
+        default: null
+    },
+
+
 })
 
 const Tweet = mongoose.model('Tweet', TweetSchema);
