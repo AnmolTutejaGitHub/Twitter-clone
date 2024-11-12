@@ -11,6 +11,10 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const Tweet = require('../Database/Models/Tweet');
 const Reply = require('../Database/Models/Reply');
+const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('cloudinary').v2;
+
 
 app.use(cors({
     origin: `http://localhost:3000`,
@@ -463,6 +467,31 @@ app.post('/findParentPost', async (req, res) => {
     }
     res.status(404).send({ message: "Not found" });
 })
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'uploads',
+        resource_type: 'auto',
+    }
+});
+
+const upload = multer({ storage: storage, limits: { fileSize: 10000000 } });
+
+app.post('/fileupload', upload.single('uploadfile'), async (req, res) => {
+    const { tweet_id } = req.body;
+    const tweet = await Tweet.findById(tweet_id);
+    tweet.fileURL = req.file?.path || null;
+    await tweet.save();
+    res.status(200).send({ message: 'File uploaded successfully!', url: tweet.fileURL });
+});
+
 
 const io = socketio(server, {
     cors: {

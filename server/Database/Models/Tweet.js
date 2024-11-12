@@ -25,6 +25,9 @@ const TweetSchema = new mongoose.Schema({
     reTweetes: {
         type: Number,
         default: 0
+    },
+    fileURL: {
+        type: String
     }
 })
 

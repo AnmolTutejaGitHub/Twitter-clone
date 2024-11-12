@@ -22,8 +22,6 @@ function Post({ tweet }) {
     function formatTime(createdTime) {
         const currTime = new Date();
         const diff = currTime - createdTime;
-        console.log(currTime);
-        console.log(createdTime);
 
         const hours = diff / (1000 * 60 * 60);
 
@@ -117,6 +115,28 @@ function Post({ tweet }) {
 
         <div>
             <p className="">{tweet.content}</p>
+
+
+            {
+                tweet.fileURL && (
+                    tweet.fileURL.endsWith('.jpg') || tweet.fileURL.endsWith('.png') || tweet.fileURL.endsWith('.jpeg') || tweet.fileURL.endsWith('.webp')
+                ) ? (
+                    <img src={tweet.fileURL} className="max-h-64" alt="Tweet media" />
+                ) : tweet.fileURL && (tweet.fileURL.endsWith('.mp4') || tweet.fileURL.endsWith('.webm')) ? (
+                    <video className="max-h-64" controls>
+                        <source src={tweet.fileURL} type="video/mp4" />
+                        <source src={tweet.fileURL.replace('.mp4', '.webm')} type="video/webm" />
+                    </video>
+                ) : tweet.fileURL && tweet.fileURL.endsWith('.mp3') ? (
+                    <audio className="max-h-64" controls>
+                        <source src={tweet.fileURL} type="audio/mp3" />
+                    </audio>
+                ) : tweet.fileURL ? (
+                    <a href={tweet.fileURL} target="_blank" className="text-blue-500">Open File</a>
+                ) : null
+            }
+
+
         </div>
 
         <div className="flex justify-around text-[#71767A]">

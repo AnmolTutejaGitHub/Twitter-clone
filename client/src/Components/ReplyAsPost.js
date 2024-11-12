@@ -22,8 +22,6 @@ function ReplyAsPost({ reply }) {
     function formatTime(createdTime) {
         const currTime = new Date();
         const diff = currTime - createdTime;
-        console.log(currTime);
-        console.log(createdTime);
 
         const hours = diff / (1000 * 60 * 60);
 
