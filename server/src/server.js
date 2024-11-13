@@ -564,6 +564,22 @@ app.post('/roomMessages', async (req, res) => {
     }
 })
 
+app.post('/changepassword', async (req, res) => {
+    const { username, oldPassword, newPassword } = req.body;
+    const user = await User.findOne({ name: username });
+
+    try {
+        const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
+        if (isPasswordMatch) {
+            user.password = newPassword;
+            await user.save();
+            return res.status(200).send("Password changed successsfully");
+        } else res.status(400).send("Password does not match");
+    } catch (e) {
+        res.status(400).send(e);
+    }
+})
+
 
 
 const io = socketio(server, {

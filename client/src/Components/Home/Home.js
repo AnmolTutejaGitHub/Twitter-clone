@@ -10,6 +10,9 @@ import Bookmarks from '../Bookmarks';
 import Quote from '../Quote';
 import './Home.css';
 import DMroom from '../DMroom';
+import Settings from '../Settings';
+import ChangePassword from '../ChangePassword';
+import AccountInformation from '../AccountInformation';
 
 function Home() {
     return (
@@ -30,6 +33,9 @@ function Home() {
                     <Route path="bookmarks" element={< Bookmarks />} />
                     <Route path="quote" element={<Quote />} />
                     <Route path="DMroom" element={<DMroom />} />
+                    <Route path="settings" element={<Settings />} />
+                    <Route path="changePassword" element={<ChangePassword />} />
+                    <Route path="accountInfo" element={<AccountInformation />} />
                 </Routes>
             </div>
 

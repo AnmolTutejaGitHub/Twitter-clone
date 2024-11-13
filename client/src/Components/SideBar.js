@@ -5,9 +5,13 @@ import { GoMail } from "react-icons/go";
 import { MdOutlineBookmarkBorder } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
+import { useContext } from 'react';
+import UserContext from '../Context/UserContext';
+import { IoSettingsOutline } from "react-icons/io5";
 
 function SideBar() {
     const navigate = useNavigate();
+    const { user, setUser } = useContext(UserContext);
     return (<div className="border-r-[1px]  border-[#2F3336] h-[100vh] fixed w-[25%]">
         <div className="pt-16 p-10 text-xl">
             <div className="flex items-center pl-10 pt-5 pb-5 gap-3 hover:bg-[#181818] cursor-pointer" onClick={() => navigate('/home/posts/allposts')}>
@@ -35,9 +39,14 @@ function SideBar() {
                 Bookmarks
             </div>
 
-            <div className="flex items-center pl-10 pt-5 pb-5 gap-3 hover:bg-[#181818] cursor-pointer">
+            <div className="flex items-center pl-10 pt-5 pb-5 gap-3 hover:bg-[#181818] cursor-pointer" onClick={() => navigate('/home/profile', { state: { user } })}>
                 <CgProfile className="text-2xl" />
                 Profile
+            </div>
+
+            <div className="flex items-center pl-10 pt-5 pb-5 gap-3 hover:bg-[#181818] cursor-pointer" onClick={() => navigate('/home/settings')}>
+                <IoSettingsOutline className="text-2xl" />
+                Settings
             </div>
 
             <div className="flex items-center pl-10 pt-5 pb-5 gap-3">
