@@ -9,6 +9,7 @@ import ReplyAsTweet from '../ReplyAsTweet';
 import Bookmarks from '../Bookmarks';
 import Quote from '../Quote';
 import './Home.css';
+import DMroom from '../DMroom';
 
 function Home() {
     return (
@@ -28,6 +29,7 @@ function Home() {
                     <Route path="reply" element={< ReplyAsTweet />} />
                     <Route path="bookmarks" element={< Bookmarks />} />
                     <Route path="quote" element={<Quote />} />
+                    <Route path="DMroom" element={<DMroom />} />
                 </Routes>
             </div>
 

@@ -70,7 +70,8 @@ const UserSchema = new mongoose.Schema({
     isVerified: {
         type: Boolean,
         default: false
-    }
+    },
+    chatted: [String]
 })
 
 UserSchema.pre('save', async function (next) {
