@@ -580,7 +580,20 @@ app.post('/changepassword', async (req, res) => {
     }
 })
 
+app.post('/isVerified', async (req, res) => {
+    const { username } = req.body;
+    const user = await User.findOne({ name: username });
+    if (user.isVerified) return res.status(200).send("Verified");
+    res.status(400).send("Not Verified");
+})
 
+app.post('/verifyuser', async (req, res) => {
+    const { username } = req.body;
+    const user = await User.findOne({ name: username });
+    user.isVerified = true;
+    await user.save();
+    res.status(200).send("User Verfied");
+})
 
 const io = socketio(server, {
     cors: {

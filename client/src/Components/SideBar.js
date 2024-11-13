@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from 'react';
 import UserContext from '../Context/UserContext';
 import { IoSettingsOutline } from "react-icons/io5";
+import { MdVerified } from "react-icons/md";
 
 function SideBar() {
     const navigate = useNavigate();
@@ -47,6 +48,11 @@ function SideBar() {
             <div className="flex items-center pl-10 pt-5 pb-5 gap-3 hover:bg-[#181818] cursor-pointer" onClick={() => navigate('/home/settings')}>
                 <IoSettingsOutline className="text-2xl" />
                 Settings
+            </div>
+
+            <div className="flex items-center pl-10 pt-5 pb-5 gap-3 hover:bg-[#181818] cursor-pointer" onClick={() => navigate('/home/getVerified')}>
+                <MdVerified className="text-2xl" />
+                Get Verified
             </div>
 
             <div className="flex items-center pl-10 pt-5 pb-5 gap-3">

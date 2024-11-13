@@ -13,6 +13,7 @@ import DMroom from '../DMroom';
 import Settings from '../Settings';
 import ChangePassword from '../ChangePassword';
 import AccountInformation from '../AccountInformation';
+import GetVerified from '../GetVerified';
 
 function Home() {
     return (
@@ -36,6 +37,7 @@ function Home() {
                     <Route path="settings" element={<Settings />} />
                     <Route path="changePassword" element={<ChangePassword />} />
                     <Route path="accountInfo" element={<AccountInformation />} />
+                    <Route path="getVerified" element={<GetVerified />} />
                 </Routes>
             </div>
 

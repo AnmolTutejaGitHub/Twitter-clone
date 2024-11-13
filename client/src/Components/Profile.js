@@ -7,6 +7,7 @@ import { useLocation } from "react-router-dom";
 import { useContext } from 'react';
 import UserContext from '../Context/UserContext';
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { MdVerified } from "react-icons/md";
 
 function Profile() {
     const location = useLocation();
@@ -18,6 +19,7 @@ function Profile() {
     const [Following, setFollowing] = useState(false);
     const [followersList, setfollowersList] = useState([]);
     const [followingList, setfollowingList] = useState([]);
+    const [verified, setVerified] = useState(false);
 
     async function getUserTweets() {
         const response = await axios.post('http://localhost:6969/usertweets', {
@@ -84,8 +86,22 @@ function Profile() {
         } catch (e) { }
     }
 
+    async function isVerified() {
+        try {
+            const response = await axios.post('http://localhost:6969/isVerified', {
+                username: user_
+            });
+            console.log(response);
+            if (response.status == 200) setVerified(true);
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     useEffect(() => {
         isFollowing();
+        isVerified();
     }, [])
 
     useEffect(() => {
@@ -97,7 +113,9 @@ function Profile() {
             <div className=" p-3 fixed ">
                 <div className="flex gap-10 align-center">
                     <IoMdArrowRoundBack onClick={() => window.history.back()} />
-                    <div>{user_}</div>
+                    <div className="flex items-center gap-2">{verified && <MdVerified />}
+                        <div>{user_}</div>
+                    </div>
                     {!Following && user != user_ && <button onClick={followHim}>Follow</button>}
                     {Following && user != user_ && <button onClick={unfollowHim}>Following</button>}
                     <div>{followersList.length} followers</div>
