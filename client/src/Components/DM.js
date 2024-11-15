@@ -73,7 +73,7 @@ function DM() {
     }
 
     const renderFriends = friends.filter((friend) => friend !== user).map((friend, index) => (
-        <div key={index} onClick={() => { handleFriendClick(friend) }} className="flex gap-2 items-center">
+        <div key={index} onClick={() => { handleFriendClick(friend) }} className="flex gap-1 items-center hover:bg-[#16181C] p-3">
             <img src={`https://ui-avatars.com/api/?name=${friend}`} className="rounded-full h-[40px]" />
             <p>{user === friend ? "myself" : friend}</p>
         </div >
@@ -113,7 +113,7 @@ function DM() {
             />
         </div>
         {error && <p className="text-red-600">*{error}</p>}
-        <div className="flex flex-col gap-4 p-4">{renderFriends}</div>
+        <div className="flex flex-col p-4">{renderFriends}</div>
     </div>)
 }
 export default DM;

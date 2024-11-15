@@ -14,6 +14,9 @@ import Settings from '../Settings';
 import ChangePassword from '../ChangePassword';
 import AccountInformation from '../AccountInformation';
 import GetVerified from '../GetVerified';
+import Explore from '../Explore';
+import Notifications from '../Notifications';
+import PostModel from '../PostModel';
 
 function Home() {
     return (
@@ -38,6 +41,9 @@ function Home() {
                     <Route path="changePassword" element={<ChangePassword />} />
                     <Route path="accountInfo" element={<AccountInformation />} />
                     <Route path="getVerified" element={<GetVerified />} />
+                    <Route path="explore" element={<Explore />} />
+                    <Route path="notification" element={<Notifications />} />
+                    <Route path="postmodel" element={<PostModel />} />
                 </Routes>
             </div>
 

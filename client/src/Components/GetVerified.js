@@ -24,7 +24,7 @@ function GetVerified() {
     }, [])
 
 
-    return (<div className=' h-[100vh]'>
+    return (<div className='h-[90vh]'>
         <div>
             {wasVerified &&
                 <>
@@ -43,10 +43,10 @@ function GetVerified() {
                     <MdVerified className='text-[40px]' />
                 </div>
                 <div className='flex flex-col h-[100vh]  bold pt-[140px] p-10'>
-                    <p>Pay 0.00068 BTC And Get Verified for Lifetime</p>
+                    <p>Pay 0.00068 <span className='text-orange-700'>BTC</span> And Get Verified for Lifetime</p>
                     <p>After Paying send us email at anmoltutejaserver@gmail.com with your TXID.</p>
                     <p>You will get Verified within 24 hours</p>
-                    <p>Walltet Address : bc1q35twckgehw482526f9t3mu2462guzjxaxte2c9</p>
+                    <p>Wallet Address : <span className='text-orange-700'>bc1q35twckgehw482526f9t3mu2462guzjxaxte2c9</span></p>
                 </div>
             </>}
         </div>

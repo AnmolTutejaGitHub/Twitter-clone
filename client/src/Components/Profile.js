@@ -113,8 +113,9 @@ function Profile() {
             <div className=" p-3 fixed ">
                 <div className="flex gap-10 align-center">
                     <IoMdArrowRoundBack onClick={() => window.history.back()} />
-                    <div className="flex items-center gap-2">{verified && <MdVerified />}
+                    <div className="flex items-center gap-2">
                         <div>{user_}</div>
+                        {verified && <MdVerified />}
                     </div>
                     {!Following && user != user_ && <button onClick={followHim}>Follow</button>}
                     {Following && user != user_ && <button onClick={unfollowHim}>Following</button>}

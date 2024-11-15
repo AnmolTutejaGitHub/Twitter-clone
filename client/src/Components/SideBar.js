@@ -20,12 +20,12 @@ function SideBar() {
                 Home
             </div>
 
-            <div className="flex items-center pl-10 pt-5 pb-5 gap-3 hover:bg-[#181818] cursor-pointer">
+            <div className="flex items-center pl-10 pt-5 pb-5 gap-3 hover:bg-[#181818] cursor-pointer" onClick={() => navigate('/home/explore')}>
                 <IoSearch className="text-2xl" />
                 Explore
             </div>
 
-            <div className="flex items-center pl-10 pt-5 pb-5 gap-3 hover:bg-[#181818] cursor-pointer">
+            <div className="flex items-center pl-10 pt-5 pb-5 gap-3 hover:bg-[#181818] cursor-pointer" onClick={() => navigate('/home/notification')}>
                 <IoNotificationsOutline className="text-2xl" />
                 Notification
             </div>
@@ -56,7 +56,7 @@ function SideBar() {
             </div>
 
             <div className="flex items-center pl-10 pt-5 pb-5 gap-3">
-                <div className="bg-[#1C90DF] p-3 pl-16 pr-16 rounded-[50px] cursor-pointer">Post</div>
+                <div className="bg-[#1C90DF] p-3 pl-16 pr-16 rounded-[50px] cursor-pointer" onClick={() => navigate('/home/postmodel')}>Post</div>
             </div>
         </div>
     </div>)
