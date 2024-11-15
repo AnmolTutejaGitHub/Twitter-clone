@@ -279,18 +279,18 @@ app.post('/unlike', async (req, res) => {
 })
 
 app.get('/alltweets', async (req, res) => {
-    const tweets = await Tweet.find({});
+    const tweets = await Tweet.find({}).sort({ createdAt: -1 });;
     res.status(200).send(tweets);
 })
 
 app.post('/usertweets', async (req, res) => {
     const { username } = req.body;
-    const tweets = await Tweet.find({ name: username });
+    const tweets = await Tweet.find({ name: username }).sort({ createdAt: -1 });;
     res.status(200).send(tweets);
 })
 app.post('/userReplies', async (req, res) => {
     const { username } = req.body;
-    const replies = await Reply.find({ name: username });
+    const replies = await Reply.find({ name: username }).sort({ createdAt: -1 });;
     res.status(200).send(replies);
 })
 
@@ -389,8 +389,8 @@ app.post('/getBookmarks', async (req, res) => {
 app.post('/deleteBookmark', async (req, res) => {
     const { username, tweet_id, reply_id } = req.body;
     const user = await User.findOne({ name: username });
-    if (tweet_id) user.bookmarks.filter(id => id != tweet_id.toString());
-    if (reply_id) user.bookmarks.filter(id => id != reply_id.toString());
+    if (tweet_id) user.bookmarks = user.bookmarks.filter(id => id != tweet_id.toString());
+    if (reply_id) user.bookmarks = user.bookmarks.filter(id => id != reply_id.toString());
     await user.save();
     res.status(200).send("Removed From Bookmark")
 })
@@ -601,6 +601,55 @@ const io = socketio(server, {
         credentials: true
     }
 });
+
+app.post('/explore', async (req, res) => {
+    const { searchTerm } = req.body;
+    const searchedTerm = searchTerm.trim().toLowerCase();
+
+    try {
+        const allUsers = await User.find();
+        const allTweets = await Tweet.find();
+        const allReplies = await Reply.find();
+
+        const users = allUsers.filter(user =>
+            user.name.toLowerCase().startsWith(searchedTerm)
+        );
+
+        const tweets = allTweets.filter(tweet =>
+            tweet.content.toLowerCase().includes(searchedTerm)
+        );
+
+        const replies = allReplies.filter(reply =>
+            reply.content.toLowerCase().includes(searchedTerm)
+        );
+
+        res.send({ users, tweets, replies });
+    } catch (e) {
+        res.status(400).send(e);
+    }
+});
+
+
+app.post('/list', async (req, res) => {
+    const { followers, following, username } = req.body;
+    const user = await User.findOne({ name: username });
+
+    if (followers) {
+        const followerDetails = await Promise.all(user.followers.map(async (followerId) => {
+            const follower = await User.findById(followerId, 'name');
+            return follower.name;
+        }));
+        return res.status(200).send(followerDetails);
+    }
+
+    if (following) {
+        const followingDetails = await Promise.all(user.following.map(async (followingId) => {
+            const followingUser = await User.findById(followingId, 'name');
+            return followingUser.name;
+        }));
+        return res.status(200).send(followingDetails);
+    }
+})
 
 io.on('connection', (socket) => {
     console.log('clinet has joined');

@@ -17,6 +17,7 @@ import GetVerified from '../GetVerified';
 import Explore from '../Explore';
 import Notifications from '../Notifications';
 import PostModel from '../PostModel';
+import FolloowersFollowingList from '../FollowersFollowingList';
 
 function Home() {
     return (
@@ -44,6 +45,7 @@ function Home() {
                     <Route path="explore" element={<Explore />} />
                     <Route path="notification" element={<Notifications />} />
                     <Route path="postmodel" element={<PostModel />} />
+                    <Route path="list" element={<FolloowersFollowingList />} />
                 </Routes>
             </div>
 

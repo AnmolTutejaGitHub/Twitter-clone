@@ -21,12 +21,20 @@ function Post({ tweet }) {
 
     function formatTime(createdTime) {
         const currTime = new Date();
-        const diff = currTime - createdTime;
+        const diff = currTime - new Date(createdTime);
 
-        const hours = diff / (1000 * 60 * 60);
+        const seconds = Math.floor(diff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
 
         if (hours < 24) {
-            return `${Math.floor(hours)}h`;
+            if (hours > 0) {
+                return `${hours}h ago`;
+            } else if (minutes > 0) {
+                return `${minutes}m ago`;
+            } else {
+                return `${seconds}s ago`;
+            }
         } else {
             return currTime.toLocaleDateString('en-IN', {
                 year: 'numeric',

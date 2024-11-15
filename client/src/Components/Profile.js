@@ -3,7 +3,7 @@ import axios from 'axios';
 import Post from '../Components/Post';
 import { useEffect } from "react";
 import ReplyAsPost from "./ReplyAsPost";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useContext } from 'react';
 import UserContext from '../Context/UserContext';
 import { IoMdArrowRoundBack } from "react-icons/io";
@@ -20,6 +20,7 @@ function Profile() {
     const [followersList, setfollowersList] = useState([]);
     const [followingList, setfollowingList] = useState([]);
     const [verified, setVerified] = useState(false);
+    const navigate = useNavigate();
 
     async function getUserTweets() {
         const response = await axios.post('http://localhost:6969/usertweets', {
@@ -108,19 +109,36 @@ function Profile() {
         getFollowersFollowing();
     }, [Following])
 
+    async function displayfollowers() {
+        const response = await axios.post(`http://localhost:6969/list`, {
+            username: user_,
+            followers: true
+        })
+        navigate('/home/list', { state: { usersList: response.data } });
+    }
+
+    async function displayfollowings() {
+        const response = await axios.post(`http://localhost:6969/list`, {
+            username: user_,
+            following: true
+        })
+        navigate('/home/list', { state: { usersList: response.data } });
+    }
+
     return (<div>
         <div>
             <div className=" p-3 fixed ">
                 <div className="flex gap-10 align-center">
                     <IoMdArrowRoundBack onClick={() => window.history.back()} />
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 justify-center">
+                        <img src={`https://ui-avatars.com/api/?name=${user_}`} className="rounded-full h-[30px]" />
                         <div>{user_}</div>
                         {verified && <MdVerified />}
                     </div>
                     {!Following && user != user_ && <button onClick={followHim}>Follow</button>}
                     {Following && user != user_ && <button onClick={unfollowHim}>Following</button>}
-                    <div>{followersList.length} followers</div>
-                    <div>{followingList.length} following</div>
+                    <div onClick={displayfollowers}>{followersList.length} followers</div>
+                    <div onClick={displayfollowings}>{followingList.length} following</div>
                 </div>
             </div>
             <div className="pt-14 "></div>
@@ -129,8 +147,14 @@ function Profile() {
                 <div onClick={() => setShowreplies(true)} className={`pb-1 ${showreplies ? "border-b-4 border-b-blue-500" : ""}`}>Replies</div>
             </div>
         </div>
-        {!showreplies && <div>{renderTweets}</div>}
-        {showreplies && <div>{renderReplies}</div>}
+        {!showreplies &&
+            <>  {tweets.length == 0 && <p className="text-[24px] text-center pt-10">User has not tweeted anything</p>}
+                <div>{renderTweets}</div>
+            </>
+        }
+        {showreplies && <>  {replies.length == 0 && <p className="text-[24px] text-center pt-10">User has not replied anything</p>}
+            <div>{renderReplies}</div>
+        </>}
     </div>)
 }
 export default Profile;

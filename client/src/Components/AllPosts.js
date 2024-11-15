@@ -57,7 +57,7 @@ function AllPosts() {
             }
             const newTweeet = response.data;
             if (url) newTweeet.fileURL = url;
-            setAllTweets([...allTweets, newTweeet]);
+            setAllTweets([newTweeet, ...allTweets,]);
             settweet('');
             fileInput.value = '';
             toast.success('Tweeted!');

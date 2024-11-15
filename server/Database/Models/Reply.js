@@ -6,7 +6,8 @@ const ReplySchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        immutable: true
     },
     replies: [String], // reply_id
     likes: {

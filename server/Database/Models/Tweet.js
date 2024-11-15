@@ -16,7 +16,8 @@ const TweetSchema = new mongoose.Schema({
     replies: [String],
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        immutable: true
     },
     likes: {
         type: Number,

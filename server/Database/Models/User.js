@@ -51,7 +51,8 @@ const UserSchema = new mongoose.Schema({
     },
     JoinedDate: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        immutable: true
     },
     tweets: [String], // id
     likes: [String],
