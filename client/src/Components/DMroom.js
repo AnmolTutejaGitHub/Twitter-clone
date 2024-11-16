@@ -8,7 +8,7 @@ import axios from 'axios';
 import ScrollToBottom from 'react-scroll-to-bottom';
 
 function DMroom() {
-    const SOCKET_SERVER_URL = `http://localhost:6969`;
+    const SOCKET_SERVER_URL = `${process.env.REACT_APP_BACKEND_URL}`;
     const socket = io(SOCKET_SERVER_URL);
     const location = useLocation();
     const roomData = location.state;
@@ -42,7 +42,7 @@ function DMroom() {
     }, [roomData.room, user]);
 
     async function getHistory() {
-        const response = await axios.post(`http://localhost:6969/roomMessages`, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/roomMessages`, {
             room_name: roomData.room
         });
 

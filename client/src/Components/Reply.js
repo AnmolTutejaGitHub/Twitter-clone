@@ -19,7 +19,7 @@ function Reply({ reply }) {
     const [isBookmarked, setIsBookmarked] = useState(false);
     const navigate = useNavigate();
     async function getReplier(replier) {
-        const response = await axios.post('http://localhost:6969/getUser', {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getUser`, {
             username: replier
         })
         setReplierObj(response.data);
@@ -47,7 +47,7 @@ function Reply({ reply }) {
     }
 
     async function LikeThePost() {
-        const response = await axios.post('http://localhost:6969/like', {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/like`, {
             reply_id: reply._id,
             username: user
         });
@@ -56,7 +56,7 @@ function Reply({ reply }) {
     }
 
     async function unLikeThePost() {
-        const response = await axios.post('http://localhost:6969/unlike', {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/unlike`, {
             reply_id: reply._id,
             username: user
         });
@@ -66,7 +66,7 @@ function Reply({ reply }) {
 
     async function wasPostLiked() {
         try {
-            const response = await axios.post('http://localhost:6969/wasTweetLiked', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/wasTweetLiked`, {
                 post_id: reply._id,
                 username: user
             })
@@ -76,7 +76,7 @@ function Reply({ reply }) {
 
     async function BookmarkTweet(e) {
         e.stopPropagation();
-        const response = await axios.post(`http://localhost:6969/addBookmark`, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/addBookmark`, {
             username: user,
             reply_id: reply._id,
         })
@@ -85,7 +85,7 @@ function Reply({ reply }) {
 
     async function unBookmarkTweet(e) {
         e.stopPropagation();
-        const response = await axios.post(`http://localhost:6969/deleteBookmark`, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/deleteBookmark`, {
             username: user,
             reply_id: reply._id,
         })
@@ -94,7 +94,7 @@ function Reply({ reply }) {
 
     async function isBookedmarked() {
         try {
-            const response = await axios.post(`http://localhost:6969/isBookedmark`, {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/isBookedmark`, {
                 username: user,
                 reply_id: reply._id,
             })
@@ -112,7 +112,7 @@ function Reply({ reply }) {
 
     async function GoToParentPost(parent_id) {
         try {
-            const response = await axios.post('http://localhost:6969/findParentPost', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/findParentPost`, {
                 parent_id: parent_id
             })
             if (response.status == 200) {

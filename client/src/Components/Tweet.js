@@ -19,7 +19,7 @@ function Tweet() {
     const [reply, setReply] = useState('')
 
     async function getReplies() {
-        const response = await axios.post('http://localhost:6969/tweetReplies', {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/tweetReplies`, {
             tweet_id: tweet._id
         })
         setreplies(response.data);
@@ -40,7 +40,7 @@ function Tweet() {
 
     async function PostTheReply() {
         toast.promise(
-            axios.post('http://localhost:6969/addTweetreply', {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addTweetreply`, {
                 tweet_id: tweet._id,
                 username: user,
                 content: reply

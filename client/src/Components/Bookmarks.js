@@ -10,7 +10,7 @@ function Bookmarks() {
     const navigate = useNavigate();
     async function getBookmarks() {
         try {
-            const response = await axios.post(`http://localhost:6969/getBookmarks`, {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getBookmarks`, {
                 username: user
             });
             setBookmarks_id(response.data);
@@ -24,7 +24,7 @@ function Bookmarks() {
 
     async function navigateToPost(id) {
         try {
-            const response = await axios.post('http://localhost:6969/findTweetorReplyById', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/findTweetorReplyById`, {
                 id: id
             })
             if (response.status == 200) {

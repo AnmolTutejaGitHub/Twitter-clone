@@ -19,7 +19,7 @@ function DM() {
     }, [user])
     async function getSearchedUserId(name) {
         try {
-            const response = await axios.post(`http://localhost:6969/findUser`, {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/findUser`, {
                 searchUser: name
             });
 
@@ -41,7 +41,7 @@ function DM() {
 
             const sortedRoomName = room.split('').sort().join('');
 
-            await axios.post(`http://localhost:6969/createOrGetDMRoom`, {
+            await axios.post(`${process.env.REACT_APP_BACKEND_URL}/createOrGetDMRoom`, {
                 room_name: sortedRoomName,
                 receiver,
                 sender: user
@@ -66,7 +66,7 @@ function DM() {
     }
 
     async function fetchFriends() {
-        const response = await axios.post(`http://localhost:6969/getFriends`, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getFriends`, {
             user: user
         })
         setFriends(response.data);

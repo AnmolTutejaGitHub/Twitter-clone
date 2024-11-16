@@ -4,6 +4,9 @@ import Login from '../Login';
 import Home from '../Home/Home';
 import './App.css';
 import toast, { Toaster } from 'react-hot-toast';
+import Signup from '../Signup';
+import OTPValidation from '../OTPValidation';
+import ForgetPassword from '../ForgetPassword';
 
 function App() {
     return (
@@ -13,6 +16,9 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="/home/*" element={<Home />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/OTPValidation" element={<OTPValidation />}></Route>
+                    <Route path="forgetpassword" element={<ForgetPassword />} />
                 </Routes>
             </BrowserRouter>
         </div>

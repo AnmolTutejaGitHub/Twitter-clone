@@ -9,7 +9,7 @@ function AccountInformation() {
     const [userObj, setUserObj] = useState({});
 
     async function getUser() {
-        const response = await axios.post(`http://localhost:6969/getUser`, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getUser`, {
             username: user
         });
         setUserObj(response.data);

@@ -14,7 +14,7 @@ function Explore() {
 
     async function Search() {
         try {
-            const response = await axios.post(`http://localhost:6969/explore`, {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/explore`, {
                 searchTerm: searchTerm
             })
             if (response.status == 200) {

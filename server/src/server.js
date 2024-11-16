@@ -19,7 +19,7 @@ const Message = require('../Database/Models/Message');
 
 
 app.use(cors({
-    origin: `http://localhost:3000`,
+    origin: `${process.env.FRONTEND_URL}`,
     credentials: true
 }));
 app.use(express.json());
@@ -597,7 +597,7 @@ app.post('/verifyuser', async (req, res) => {
 
 const io = socketio(server, {
     cors: {
-        origin: `http://localhost:3000`,
+        origin: `${process.env.FRONTEND_URL}`,
         credentials: true
     }
 });

@@ -13,7 +13,7 @@ function AllPosts() {
     const [tweet, settweet] = useState('');
 
     async function getAllTweets() {
-        const response = await axios.get(`http://localhost:6969/alltweets`);
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/alltweets`);
         setAllTweets(response.data);
     }
 
@@ -30,7 +30,7 @@ function AllPosts() {
         const toastId = toast.loading('Posting...');
         let url = '';
         try {
-            const response = await axios.post('http://localhost:6969/tweet', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/tweet`, {
                 username: user,
                 content: tweet
             });
@@ -43,7 +43,7 @@ function AllPosts() {
                 formData.append('tweet_id', response.data._id);
 
                 try {
-                    const uploadResponse = await fetch('http://localhost:6969/fileupload', {
+                    const uploadResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/fileupload`, {
                         method: 'POST',
                         body: formData
                     });

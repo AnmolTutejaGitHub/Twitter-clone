@@ -46,7 +46,7 @@ function Post({ tweet }) {
 
 
     async function LikeThePost() {
-        const response = await axios.post('http://localhost:6969/like', {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/like`, {
             tweet_id: tweet._id,
             username: user
         });
@@ -55,7 +55,7 @@ function Post({ tweet }) {
     }
 
     async function unLikeThePost() {
-        const response = await axios.post('http://localhost:6969/unlike', {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/unlike`, {
             tweet_id: tweet._id,
             username: user
         });
@@ -65,7 +65,7 @@ function Post({ tweet }) {
 
     async function wasPostLiked() {
         try {
-            const response = await axios.post('http://localhost:6969/wasTweetLiked', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/wasTweetLiked`, {
                 post_id: tweet._id,
                 username: user
             })
@@ -75,7 +75,7 @@ function Post({ tweet }) {
 
     async function BookmarkTweet(e) {
         e.stopPropagation();
-        const response = await axios.post(`http://localhost:6969/addBookmark`, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/addBookmark`, {
             username: user,
             tweet_id: tweet._id
         })
@@ -84,7 +84,7 @@ function Post({ tweet }) {
 
     async function unBookmarkTweet(e) {
         e.stopPropagation();
-        const response = await axios.post(`http://localhost:6969/deleteBookmark`, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/deleteBookmark`, {
             username: user,
             tweet_id: tweet._id
         })
@@ -93,7 +93,7 @@ function Post({ tweet }) {
 
     async function isBookedmarked() {
         try {
-            const response = await axios.post(`http://localhost:6969/isBookedmark`, {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/isBookedmark`, {
                 username: user,
                 tweet_id: tweet._id
             })

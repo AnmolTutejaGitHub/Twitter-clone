@@ -18,8 +18,25 @@ import Explore from '../Explore';
 import Notifications from '../Notifications';
 import PostModel from '../PostModel';
 import FolloowersFollowingList from '../FollowersFollowingList';
+import { useContext, useEffect } from 'react';
+import UserContext from '../../Context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
+    const { user, setUser } = useContext(UserContext);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!user) logout();
+    }, []);
+
+    function logout() {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        setUser('');
+        navigate('/');
+    }
+
     return (
         <div className='home'>
 

@@ -23,14 +23,14 @@ function Profile() {
     const navigate = useNavigate();
 
     async function getUserTweets() {
-        const response = await axios.post('http://localhost:6969/usertweets', {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/usertweets`, {
             username: user_
         })
         setTweets(response.data);
     }
 
     async function getUserReplies() {
-        const response = await axios.post('http://localhost:6969/userReplies', {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/userReplies`, {
             username: user_
         })
         setReplies(response.data);
@@ -50,7 +50,7 @@ function Profile() {
     })
 
     async function followHim() {
-        const response = axios.post('http://localhost:6969/followAccount', {
+        const response = axios.post(`${process.env.REACT_APP_BACKEND_URL}/followAccount`, {
             username: user,
             creator: user_
         })
@@ -59,7 +59,7 @@ function Profile() {
     }
 
     async function unfollowHim() {
-        const response = axios.post('http://localhost:6969/unfollowAccount', {
+        const response = axios.post(`${process.env.REACT_APP_BACKEND_URL}/unfollowAccount`, {
             username: user,
             creator: user_
         })
@@ -69,7 +69,7 @@ function Profile() {
 
     async function isFollowing() {
         try {
-            const response = await axios.post('http://localhost:6969/isFollowed', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/isFollowed`, {
                 username: user,
                 creator: user_
             })
@@ -79,7 +79,7 @@ function Profile() {
 
     async function getFollowersFollowing() {
         try {
-            const response = await axios.post('http://localhost:6969/getFollowersFollowing', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getFollowersFollowing`, {
                 username: user_,
             })
             setfollowersList(response.data.followers);
@@ -89,7 +89,7 @@ function Profile() {
 
     async function isVerified() {
         try {
-            const response = await axios.post('http://localhost:6969/isVerified', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/isVerified`, {
                 username: user_
             });
             console.log(response);
@@ -110,7 +110,7 @@ function Profile() {
     }, [Following])
 
     async function displayfollowers() {
-        const response = await axios.post(`http://localhost:6969/list`, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/list`, {
             username: user_,
             followers: true
         })
@@ -118,7 +118,7 @@ function Profile() {
     }
 
     async function displayfollowings() {
-        const response = await axios.post(`http://localhost:6969/list`, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/list`, {
             username: user_,
             following: true
         })

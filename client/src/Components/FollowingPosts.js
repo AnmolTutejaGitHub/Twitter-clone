@@ -13,7 +13,7 @@ function FollowingPosts() {
 
 
     async function getfollowingTweets() {
-        const response = await axios.post(`http://localhost:6969/getFollowingTweets`, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getFollowingTweets`, {
             username: user
         });
         setfollowingTweets(response.data);
@@ -47,7 +47,7 @@ function FollowingPosts() {
     async function PostTheTweet() {
         const toastId = toast.loading('Posting...');
         try {
-            const response = await axios.post('http://localhost:6969/tweet', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/tweet`, {
                 username: user,
                 content: tweet
             });
@@ -60,7 +60,7 @@ function FollowingPosts() {
                 formData.append('tweet_id', response.data._id);
 
                 try {
-                    const uploadResponse = await fetch('http://localhost:6969/fileupload', {
+                    const uploadResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/fileupload`, {
                         method: 'POST',
                         body: formData
                     });

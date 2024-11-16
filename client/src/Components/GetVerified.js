@@ -9,7 +9,7 @@ function GetVerified() {
 
     async function isVerified() {
         try {
-            const response = await axios.post('http://localhost:6969/isVerified', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/isVerified`, {
                 username: user
             });
             if (response.status == 200) setWasVerified(true);
