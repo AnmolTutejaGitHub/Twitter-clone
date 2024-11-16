@@ -18,13 +18,19 @@ import Explore from '../Explore';
 import Notifications from '../Notifications';
 import PostModel from '../PostModel';
 import FolloowersFollowingList from '../FollowersFollowingList';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import UserContext from '../../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { FaBars } from "react-icons/fa";
 
 function Home() {
     const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
+    const [sidebarvisib, setsidebarvisib] = useState(false);
+
+    function barsclicked() {
+        setsidebarvisib(!sidebarvisib);
+    }
 
     useEffect(() => {
         if (!user) logout();
@@ -40,9 +46,12 @@ function Home() {
     return (
         <div className='home'>
 
-            <div className='sidebar__home'>
+            <div className={'sidebar__home max-w-[850px]:hidden '}>
                 <SideBar />
             </div>
+            {/* <div className="bars" onClick={barsclicked}>
+                <FaBars />
+            </div> */}
 
             <div className='home__routes'>
                 <Routes>
@@ -66,9 +75,9 @@ function Home() {
                 </Routes>
             </div>
 
-            <div className="border-l-[1px]  border-[#2F3336] h-[100vh] w-[25%] sticky top-0">
+            <div className="border-l-[1px]  border-[#2F3336] h-[100vh] w-[25%] sticky top-0 max-w-400-width">
             </div>
-        </div>
+        </div >
     )
 }
 export default Home;

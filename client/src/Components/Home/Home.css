@@ -14,7 +14,33 @@
     height: 100%;
 }
 
-.home__disccover {
-    width: 25%;
-    height: 100%;
+.bars{
+    display: none;
+    height: 20px;
+    padding:1rem;
+}
+
+@media(max-width:850px){
+    .home__routes {
+        width:100%
+    }
+    .sidebar__home{
+       visibility: hidden;
+        width: 25%;
+    }
+    .bars{
+        display: block;
+    }
+}
+
+.display-sidebar {
+    visibility: visible !important;
+    width: 100vw !important;
+    background-color: black!important;
+    height: 100vh !important;
+    position: fixed;
+    left: 0; 
+    top: 0; 
+    overflow: hidden;
+    z-index: 99999;
 }
