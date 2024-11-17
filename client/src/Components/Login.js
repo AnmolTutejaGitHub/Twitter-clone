@@ -4,14 +4,17 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Blocks } from 'react-loader-spinner'
 import { RiTwitterXFill } from "react-icons/ri";
+import { useDispatch } from 'react-redux';
+import { setUser } from './../redux/actions/userActions';
 
 function Login() {
     const [EnteredUser, setEnteredUser] = useState('');
     const [EnteredEmail, setEnteredEmail] = useState('');
     const [EnteredPassword, setEnteredPassword] = useState('');
     const [Error, setError] = useState('');
-    const { user, setUser, loading } = useContext(UserContext);
+    const { user, loading } = useContext(UserContext);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (user) navigate('/home/posts/allposts');
@@ -28,10 +31,10 @@ function Login() {
 
             if (response.status === 200) {
                 const token = response.data.token;
-                //console.log(token);
+                const EnteredUser = response.data.user;
                 localStorage.setItem('token', token);
-                setUser(EnteredUser);
-                //navigate('/home');
+                sessionStorage.setItem('user', EnteredUser);
+                dispatch(setUser(EnteredUser));
                 navigate('/OTPValidation', { state: { email: EnteredEmail } });
             }
         } catch (error) {

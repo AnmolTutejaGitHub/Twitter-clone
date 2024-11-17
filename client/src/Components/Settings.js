@@ -4,15 +4,24 @@ import { IoPersonOutline } from "react-icons/io5";
 import { FaKey } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineLogout } from "react-icons/ai";
+import { useDispatch } from 'react-redux';
+import { clearUser } from '../redux/actions/userActions';
 
 function Settings() {
     const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    // function logout() {
+    //     localStorage.removeItem('token');
+    //     setUser('');
+    //     navigate('/');
+    // }
 
     function logout() {
-        localStorage.removeItem('user');
         localStorage.removeItem('token');
-        setUser('');
+        dispatch(clearUser());
+        sessionStorage.removeItem('user');
         navigate('/');
     }
 

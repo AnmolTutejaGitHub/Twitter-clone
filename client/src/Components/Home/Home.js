@@ -22,30 +22,34 @@ import { useContext, useEffect, useState } from 'react';
 import UserContext from '../../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { FaBars } from "react-icons/fa";
+import { useDispatch } from 'react-redux';
+import { clearUser } from '../../redux/actions/userActions';
 
 function Home() {
     const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
     const [sidebarvisib, setsidebarvisib] = useState(false);
+    const dispatch = useDispatch();
 
     function barsclicked() {
         setsidebarvisib(!sidebarvisib);
     }
 
     useEffect(() => {
-        if (!user) logout();
-    }, []);
+        if (!user) {
+            logout();
+        }
+    }, [user]);
 
     function logout() {
-        localStorage.removeItem('user');
         localStorage.removeItem('token');
-        setUser('');
+        dispatch(clearUser());
+        sessionStorage.removeItem('user');
         navigate('/');
     }
 
     return (
         <div className='home'>
-
             <div className={'sidebar__home max-w-[850px]:hidden '}>
                 <SideBar />
             </div>

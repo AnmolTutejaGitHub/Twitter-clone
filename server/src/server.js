@@ -346,7 +346,7 @@ app.post('/isFollowed', async (req, res) => {
     const user = await User.findOne({ name: username });
     const Creator = await User.findOne({ name: creator });
 
-    const isFollowing = user.following.includes(Creator._id.toString());
+    const isFollowing = user?.following?.includes(Creator._id.toString());
     if (isFollowing) res.status(200).send("following");
     else res.status(404).send('not following');
 })
@@ -400,12 +400,12 @@ app.post('/isBookedmark', async (req, res) => {
     const user = await User.findOne({ name: username });
 
     if (tweet_id) {
-        const isBookmarked = user.bookmarks.includes(tweet_id);
+        const isBookmarked = user?.bookmarks?.includes(tweet_id);
         if (isBookmarked) return res.status(200).send("Bookedmarked");
     }
 
     if (reply_id) {
-        const isBookmarked = user.bookmarks.includes(reply_id);
+        const isBookmarked = user?.bookmarks?.includes(reply_id);
         if (isBookmarked) return res.status(200).send("Bookedmarked");
     }
 

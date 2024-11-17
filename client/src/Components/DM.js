@@ -66,10 +66,13 @@ function DM() {
     }
 
     async function fetchFriends() {
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getFriends`, {
-            user: user
-        })
-        setFriends(response.data);
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getFriends`, {
+                user: user
+            })
+            setFriends(response.data);
+        } catch (e) { }
+
     }
 
     const renderFriends = friends.filter((friend) => friend !== user).map((friend, index) => (
