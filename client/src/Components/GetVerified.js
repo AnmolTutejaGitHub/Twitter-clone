@@ -3,9 +3,11 @@ import UserContext from '../Context/UserContext';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { MdVerified } from "react-icons/md";
+import { ColorRing } from 'react-loader-spinner';
 function GetVerified() {
     const { user, setUser } = useContext(UserContext);
     const [wasVerified, setWasVerified] = useState(false);
+    const [loading, setloading] = useState(true);
 
     async function isVerified() {
         try {
@@ -16,6 +18,8 @@ function GetVerified() {
 
         } catch (e) {
             console.log(e);
+        } finally {
+            setloading(false);
         }
     }
 
@@ -25,7 +29,7 @@ function GetVerified() {
 
 
     return (<div className='h-[90vh]'>
-        <div>
+        {!loading && <div>
             {wasVerified &&
                 <>
                     <div className='flex flex-col justify-center items-center'>
@@ -49,7 +53,16 @@ function GetVerified() {
                     <p>Wallet Address : <span className='text-orange-700'>bc1q35twckgehw482526f9t3mu2462guzjxaxte2c9</span></p>
                 </div>
             </>}
-        </div>
+        </div>}
+        {loading && <div className='flex justify-center items-center h-[60vh]'><ColorRing
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="color-ring-loading"
+            wrapperStyle={{}}
+            wrapperClass="color-ring-wrapper"
+            colors={['#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF']}
+        /></div>}
     </div>)
 }
 export default GetVerified;

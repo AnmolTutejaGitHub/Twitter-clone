@@ -5,11 +5,13 @@ import { useState } from 'react';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { RiGalleryFill } from "react-icons/ri";
+import { ColorRing } from 'react-loader-spinner';
 
 function FollowingPosts() {
     const { user, setUser } = useContext(UserContext);
     const [followingTweets, setfollowingTweets] = useState([]);
     const [tweet, settweet] = useState('');
+    const [loading, setloading] = useState(true);
 
 
     async function getfollowingTweets() {
@@ -17,6 +19,7 @@ function FollowingPosts() {
             username: user
         });
         setfollowingTweets(response.data);
+        setloading(false);
     }
 
     useEffect(() => {
@@ -100,6 +103,15 @@ function FollowingPosts() {
             </div>
         </div>
         <div className='pt-2'>{renderTweets}</div>
+        {loading && <div className='flex justify-center items-center h-[60vh]'><ColorRing
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="color-ring-loading"
+            wrapperStyle={{}}
+            wrapperClass="color-ring-wrapper"
+            colors={['#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF']}
+        /></div>}
     </div>)
 }
 export default FollowingPosts;

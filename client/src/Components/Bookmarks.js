@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import UserContext from '../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { ColorRing } from 'react-loader-spinner';
 
 function Bookmarks() {
     const [bookmarks_id, setBookmarks_id] = useState([]);
     const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
+    const [loading, setloading] = useState(true);
     async function getBookmarks() {
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getBookmarks`, {
@@ -15,6 +17,7 @@ function Bookmarks() {
             });
             setBookmarks_id(response.data);
             console.log(response.data);
+            setloading(false);
         } catch (e) { }
     }
 
@@ -37,6 +40,20 @@ function Bookmarks() {
     const renderBookmarks = bookmarks_id.map((id) => {
         return <p className='text-blue-500 cursor-pointer' onClick={() => navigateToPost(id)}>{id}</p>
     })
-    return (<div className='flex flex-col text-center pt-16'>{renderBookmarks}</div>);
+    return (
+        <div>
+            <div className='flex flex-col text-center pt-16'>{renderBookmarks}</div>
+            {loading && <div className='flex justify-center items-center h-[60vh]'><ColorRing
+                visible={true}
+                height="80"
+                width="80"
+                ariaLabel="color-ring-loading"
+                wrapperStyle={{}}
+                wrapperClass="color-ring-wrapper"
+                colors={['#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF']}
+            /></div>}
+        </div>
+
+    );
 }
 export default Bookmarks;

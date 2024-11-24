@@ -8,6 +8,7 @@ import { useContext } from 'react';
 import UserContext from '../Context/UserContext';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdVerified } from "react-icons/md";
+import { ColorRing } from 'react-loader-spinner';
 
 function Profile() {
     const location = useLocation();
@@ -20,6 +21,8 @@ function Profile() {
     const [followersList, setfollowersList] = useState([]);
     const [followingList, setfollowingList] = useState([]);
     const [verified, setVerified] = useState(false);
+    const [loading, setloading] = useState(true);
+
     const navigate = useNavigate();
 
     async function getUserTweets() {
@@ -27,6 +30,7 @@ function Profile() {
             username: user_
         })
         setTweets(response.data);
+        setloading(false);
     }
 
     async function getUserReplies() {
@@ -34,6 +38,7 @@ function Profile() {
             username: user_
         })
         setReplies(response.data);
+        setloading(false);
     }
 
     useEffect(() => {
@@ -155,6 +160,17 @@ function Profile() {
         {showreplies && <>  {replies.length == 0 && <p className="text-[24px] text-center pt-10">User has not replied anything</p>}
             <div>{renderReplies}</div>
         </>}
+
+        {loading && <div className='flex justify-center items-center h-[60vh]'><ColorRing
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="color-ring-loading"
+            wrapperStyle={{}}
+            wrapperClass="color-ring-wrapper"
+            colors={['#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF']}
+        /></div>}
+
     </div>)
 }
 export default Profile;

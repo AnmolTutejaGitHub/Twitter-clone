@@ -5,16 +5,19 @@ import { useContext } from 'react';
 import UserContext from '../Context/UserContext';
 import toast, { Toaster } from 'react-hot-toast';
 import { RiGalleryFill } from "react-icons/ri";
+import { ColorRing } from 'react-loader-spinner';
 
 
 function AllPosts() {
     const [allTweets, setAllTweets] = useState([]);
     const { user, setUser } = useContext(UserContext);
     const [tweet, settweet] = useState('');
+    const [loading, setloading] = useState(true);
 
     async function getAllTweets() {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/alltweets`);
         setAllTweets(response.data);
+        setloading(false);
     }
 
     useEffect(() => {
@@ -89,6 +92,15 @@ function AllPosts() {
             </div>
         </div>
         <div className='pt-2'>{renderTweets}</div>
+        {loading && <div className='flex justify-center items-center h-[60vh]'><ColorRing
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="color-ring-loading"
+            wrapperStyle={{}}
+            wrapperClass="color-ring-wrapper"
+            colors={['#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF']}
+        /></div>}
     </div>)
 }
 export default AllPosts;

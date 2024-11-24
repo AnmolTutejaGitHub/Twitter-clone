@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from 'react';
 import UserContext from '../Context/UserContext';
 import { useEffect } from "react";
+import { ColorRing } from 'react-loader-spinner';
 
 function DM() {
     const [EnteredUsername, setUsername] = useState('');
@@ -12,7 +13,7 @@ function DM() {
     const navigate = useNavigate();
     const [error, setError] = useState('');
     const [friends, setFriends] = useState([]);
-
+    const [loading, setloading] = useState(true);
 
     useEffect(() => {
         fetchFriends();
@@ -71,6 +72,7 @@ function DM() {
                 user: user
             })
             setFriends(response.data);
+            setloading(false);
         } catch (e) { }
 
     }
@@ -117,6 +119,15 @@ function DM() {
         </div>
         {error && <p className="text-red-600">*{error}</p>}
         <div className="flex flex-col p-4">{renderFriends}</div>
+        {loading && <div className='flex justify-center items-center h-[60vh]'><ColorRing
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="color-ring-loading"
+            wrapperStyle={{}}
+            wrapperClass="color-ring-wrapper"
+            colors={['#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF']}
+        /></div>}
     </div>)
 }
 export default DM;
