@@ -122,7 +122,7 @@ function Post({ tweet }) {
         </div>
 
         <div>
-            <p className="">{tweet.content}</p>
+            <p className="break-all">{tweet.content}</p>
             {tweet?.isQuote?._bool &&
                 <div className="text-blue-500 cursor-pointer text-[13px]" onClick={(e) => { e.stopPropagation(); navigate('/home/tweet', { state: { tweet: tweet.isQuote.parent } }) }}>Quote to post_id : {tweet.isQuote.parent._id}</div>
             }

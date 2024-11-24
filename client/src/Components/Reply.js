@@ -137,7 +137,7 @@ function Reply({ reply }) {
         <div className="text-[13px] text-blue-500" onClick={(e) => { e.stopPropagation(); GoToParentPost(reply.parent_id) }}>replying to post id: {reply.parent_id}</div>
 
         <div>
-            <p className="">{reply.content}</p>
+            <p className="break-all">{reply.content}</p>
         </div>
 
         <div className="flex justify-around text-[#71767A]">
