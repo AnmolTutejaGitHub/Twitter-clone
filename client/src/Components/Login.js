@@ -6,6 +6,7 @@ import { Blocks } from 'react-loader-spinner'
 import { RiTwitterXFill } from "react-icons/ri";
 import { useDispatch } from 'react-redux';
 import { setUser } from './../redux/actions/userActions';
+import ClipLoader from "react-spinners/ClipLoader";
 
 function Login() {
     const [EnteredUser, setEnteredUser] = useState('');
@@ -15,6 +16,7 @@ function Login() {
     const { user, loading } = useContext(UserContext);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [loginLoader, setLoginLoader] = useState(false);
 
     useEffect(() => {
         if (user) navigate('/home/posts/allposts');
@@ -22,7 +24,7 @@ function Login() {
 
     async function handleLogin() {
         try {
-            console.log(`${process.env.REACT_APP_BACKEND_URL}`);
+            setLoginLoader(true);
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
                 name: EnteredUser,
                 email: EnteredEmail,
@@ -39,6 +41,8 @@ function Login() {
             }
         } catch (error) {
             setError(error?.response?.data?.error || "Some error Occurred");
+        } finally {
+            setLoginLoader(false);
         }
     }
 
@@ -69,7 +73,12 @@ function Login() {
                         <input placeholder="Enter Password" onChange={(e) => { setEnteredPassword(e.target.value) }} className='p-[0.6rem] outline-none w-full bg-inherit border-[1.7px] border-[#333639] focus:border-[#1C9BEF] placeholder:text-[#71767A]' required></input>
                         <div><Link to="/forgetpassword" className='text-[#1C9BEF]'>Forget Password?</Link></div>
                         <p>Don't have an Account ? <span><Link to="/signup" className='text-[#1C9BEF]'>Signup</Link></span></p>
-                        <button type="submit" className='p-2 bg-sky-600 rounded-sm'>Login</button>
+                        <button type="submit" className={`p-2 bg-sky-600 rounded-sm ${loginLoader ? 'pt-1 pb-1 cursor-not-allowed bg-sky-800' : ''}`}>{loginLoader ?
+                            <ClipLoader
+                                color={'#fff'}
+                                aria-label="Loading Spinner"
+                                data-testid="loader"
+                            /> : 'login'}</button>
                         {Error && <p className='text-red-600'>*{Error}</p>}
                     </form>
                 </div>}

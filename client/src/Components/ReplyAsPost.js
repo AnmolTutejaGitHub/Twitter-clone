@@ -22,6 +22,7 @@ function ReplyAsPost({ reply }) {
     function formatTime(createdTime) {
         const currTime = new Date();
         const diff = currTime - new Date(createdTime);
+        const createdTimeObj = new Date(createdTime);
 
         const seconds = Math.floor(diff / 1000);
         const minutes = Math.floor(seconds / 60);
@@ -36,7 +37,7 @@ function ReplyAsPost({ reply }) {
                 return `${seconds}s ago`;
             }
         } else {
-            return currTime.toLocaleDateString('en-IN', {
+            return createdTimeObj.toLocaleDateString('en-IN', {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric',

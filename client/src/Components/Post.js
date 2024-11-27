@@ -21,6 +21,7 @@ function Post({ tweet }) {
 
     function formatTime(createdTime) {
         const currTime = new Date();
+        const createdTimeObj = new Date(createdTime);
         const diff = currTime - new Date(createdTime);
 
         const seconds = Math.floor(diff / 1000);
@@ -36,7 +37,7 @@ function Post({ tweet }) {
                 return `${seconds}s ago`;
             }
         } else {
-            return currTime.toLocaleDateString('en-IN', {
+            return createdTimeObj.toLocaleDateString('en-IN', {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric',

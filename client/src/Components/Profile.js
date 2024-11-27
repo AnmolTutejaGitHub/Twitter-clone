@@ -153,7 +153,7 @@ function Profile() {
             </div>
         </div>
         {!showreplies &&
-            <>  {tweets.length == 0 && <p className="text-[24px] text-center pt-10">User has not tweeted anything</p>}
+            <>  {!loading && tweets.length == 0 && <p className="text-[24px] text-center pt-10">User has not tweeted anything</p>}
                 <div>{renderTweets}</div>
             </>
         }
