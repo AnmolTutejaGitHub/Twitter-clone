@@ -1,68 +1,66 @@
-import { useContext } from 'react';
-import UserContext from '../Context/UserContext';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { MdVerified } from "react-icons/md";
-import { ColorRing } from 'react-loader-spinner';
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+import toast from 'react-hot-toast';
+
 function GetVerified() {
-    const { user, setUser } = useContext(UserContext);
-    const [wasVerified, setWasVerified] = useState(false);
-    const [loading, setloading] = useState(true);
+  const [email,setEmail] = useState("");
+  const token = localStorage.getItem("token");
 
-    async function isVerified() {
-        try {
-            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/isVerified`, {
-                username: user
-            });
-            if (response.status == 200) setWasVerified(true);
-
-        } catch (e) {
-            console.log(e);
-        } finally {
-            setloading(false);
-        }
-    }
-
-    useEffect(() => {
-        isVerified();
-    }, [])
-
-
-    return (<div className='h-[90vh]'>
-        {!loading && <div>
-            {wasVerified &&
-                <>
-                    <div className='flex flex-col justify-center items-center'>
-                        <p className='text-[22px] bold text-center pt-[20px]'>Your Account Has already been Verified</p>
-                        <p className='text-[22px] bold text-center pt-[20px]'>Thanks for Supporting us</p>
-                        <div className='flex justify-center'>
-                            <MdVerified className='text-[100px] bold text-center pt-[20px]' />
-                        </div>
-                    </div>
-                </>
+  async function sendVerfificationEmail(){
+    const id = toast.loading("sending verfication mail");
+    try{
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/generate-Verification-Token`,
+            {email},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
             }
-            {!wasVerified && <>
-                <div className='flex flex-row justify-center items-center  pt-10 gap-3'>
-                    <p className='text-[30px] text-center'>Get Verified Now</p>
-                    <MdVerified className='text-[40px]' />
-                </div>
-                <div className='flex flex-col h-[100vh]  bold pt-[140px] p-10'>
-                    <p>Pay 0.00068 <span className='text-orange-700'>BTC</span> And Get Verified for Lifetime</p>
-                    <p>After Paying send us email at anmoltutejaserver@gmail.com with your TXID.</p>
-                    <p>You will get Verified within 24 hours</p>
-                    <p>Wallet Address : <span className='text-orange-700'>bc1q35twckgehw482526f9t3mu2462guzjxaxte2c9</span></p>
-                </div>
-            </>}
-        </div>}
-        {loading && <div className='flex justify-center items-center h-[60vh]'><ColorRing
-            visible={true}
-            height="80"
-            width="80"
-            ariaLabel="color-ring-loading"
-            wrapperStyle={{}}
-            wrapperClass="color-ring-wrapper"
-            colors={['#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF', '#1C90DF']}
-        /></div>}
-    </div>)
+          )
+    toast.success("check your inbox");
+    }catch(err){
+        toast.error(err.response?.data?.message || err.response?.data?.error || "error sending mail");
+    }finally{
+        toast.dismiss(id);
+    }
+  }
+  return (
+      <section className="h-[100vh] w-[100vw] flex items-center justify-center bg-[#000000]">
+        <fieldset className="rounded-xl w-[30rem] h-[24rem] p-8 shadow-xl bg-[#000000]">
+          <legend className="text-2xl font-bold text-[#0584C7] mb-6">
+            Get Verified
+          </legend>
+
+          <p className="text-lg text-[#F9F1F1] mb-4">
+            Enter your email to get verified.
+          </p>
+
+          <label className="block text-lg font-medium text-[#F9F1F1]">Email</label>
+          <input
+            type="email"
+            className="input input-bordered w-full mt-1 rounded-lg bg-gray-100 text-black p-2"
+            placeholder="Enter your email"
+            onChange={(e)=>setEmail(e.target.value)}
+          />
+
+          <button className="btn mt-6 w-full bg-[#0584C7] hover:bg-[#0584C7]/70 text-white rounded-lg text-lg font-semibold p-2"
+          onClick={sendVerfificationEmail}>
+            Send Verification Token
+          </button>
+
+          <div className="text-lg text-[#F9F1F1] mt-6 text-center">
+            Already verified?{" "}
+            <Link
+              to="/login"
+              className="text-[#F75904]/60 text-[#0584C7] font-semibold hover:underline"
+            >
+              Login
+            </Link>
+          </div>
+        </fieldset>
+      </section>
+  );
 }
+
 export default GetVerified;

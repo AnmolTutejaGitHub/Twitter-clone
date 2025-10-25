@@ -2,14 +2,13 @@ import { useState } from "react";
 import { MdMail } from "react-icons/md";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import { useContext } from 'react';
-import UserContext from '../Context/UserContext';
 import { useEffect } from "react";
 import { ColorRing } from 'react-loader-spinner';
+import useUserStore from "../store/userStore";
 
 function DM() {
     const [EnteredUsername, setUsername] = useState('');
-    const { user, setUser } = useContext(UserContext);
+    const { username,isAuthenticated,clearUser,userid } = useUserStore();
     const navigate = useNavigate();
     const [error, setError] = useState('');
     const [friends, setFriends] = useState([]);
@@ -17,7 +16,7 @@ function DM() {
 
     useEffect(() => {
         fetchFriends();
-    }, [user])
+    }, [username])
     async function getSearchedUserId(name) {
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/findUser`, {
@@ -35,7 +34,7 @@ function DM() {
     async function EstablishDM() {
         const receiver = EnteredUsername;
         const receiver_id = await getSearchedUserId(EnteredUsername);
-        const sender_id = await getSearchedUserId(user);
+        const sender_id = await getSearchedUserId(username);
 
         if (receiver_id && sender_id) {
             const room = sender_id + receiver_id;
@@ -45,11 +44,11 @@ function DM() {
             await axios.post(`${process.env.REACT_APP_BACKEND_URL}/createOrGetDMRoom`, {
                 room_name: sortedRoomName,
                 receiver,
-                sender: user
+                sender: username
             });
 
             const roomData = {
-                sender: user,
+                sender: username,
                 receiver: receiver,
                 room: sortedRoomName
             }
@@ -69,7 +68,7 @@ function DM() {
     async function fetchFriends() {
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getFriends`, {
-                user: user
+                user: username
             })
             setFriends(response.data);
             setloading(false);
@@ -77,23 +76,23 @@ function DM() {
 
     }
 
-    const renderFriends = friends.filter((friend) => friend !== user).map((friend, index) => (
+    const renderFriends = friends.filter((friend) => friend !== username).map((friend, index) => (
         <div key={index} onClick={() => { handleFriendClick(friend) }} className="flex gap-1 items-center hover:bg-[#16181C] p-3">
             <img src={`https://ui-avatars.com/api/?name=${friend}`} className="rounded-full h-[40px]" />
-            <p>{user === friend ? "myself" : friend}</p>
+            <p>{username === friend ? "myself" : friend}</p>
         </div >
     ));
 
     async function handleFriendClick(friend) {
 
         const receiver_id = await getSearchedUserId(friend);
-        const sender_id = await getSearchedUserId(user);
+        const sender_id = await getSearchedUserId(username);
 
         const room = sender_id + receiver_id;
         const sortedRoomName = room.split('').sort().join('');
 
         const roomData = {
-            sender: user,
+            sender: username,
             receiver: friend,
             room: sortedRoomName
         }

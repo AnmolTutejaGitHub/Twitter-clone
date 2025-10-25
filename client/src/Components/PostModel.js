@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useContext } from 'react';
-import UserContext from '../Context/UserContext';
+import useUserStore from "../store/userStore";
 import toast, { Toaster } from 'react-hot-toast';
 import { RiGalleryFill } from "react-icons/ri";
 
 function PostModel() {
-    const { user, setUser } = useContext(UserContext);
+    const { username,isAuthenticated,clearUser,userid } = useUserStore();
     const [tweet, settweet] = useState('');
+    const token = localStorage.getItem("token");
 
     function autoResize(e) {
         e.target.style.height = 'auto';
@@ -19,9 +19,12 @@ function PostModel() {
         let url = '';
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/tweet`, {
-                username: user,
                 content: tweet
-            });
+            },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
             const fileInput = document.getElementById('uploadfile');
             const file = fileInput.files[0];
@@ -57,7 +60,7 @@ function PostModel() {
     return (<div>
         <div className='pt-[55px]' >
             <div className='flex items-center p-2'>
-                <img src={`https://ui-avatars.com/api/?name=${user}`} className='rounded-full h-8' />
+                <img src={`https://ui-avatars.com/api/?name=${username}`} className='rounded-full h-8' />
                 <textarea placeholder="What is happening?!" className=" p-2 h-10 focus:outline-none bg-inherit w-full resize-none text-lg" onInput={autoResize}
                     onChange={(e) => settweet(e.target.value)} value={tweet} />
             </div>

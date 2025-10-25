@@ -1,22 +1,23 @@
-import { useContext, useEffect } from 'react';
-import UserContext from '../Context/UserContext';
 import Post from './Post';
 import { useState } from 'react';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { RiGalleryFill } from "react-icons/ri";
 import { ColorRing } from 'react-loader-spinner';
+import useUserStore from "../store/userStore";
+import {useEffect} from 'react';
 
 function FollowingPosts() {
-    const { user, setUser } = useContext(UserContext);
+    const { username,isAuthenticated,clearUser,userid } = useUserStore();
     const [followingTweets, setfollowingTweets] = useState([]);
     const [tweet, settweet] = useState('');
     const [loading, setloading] = useState(true);
+    const token = localStorage.getItem('token');
 
 
     async function getfollowingTweets() {
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getFollowingTweets`, {
-            username: user
+            username: username
         });
         setfollowingTweets(response.data);
         setloading(false);
@@ -51,9 +52,12 @@ function FollowingPosts() {
         const toastId = toast.loading('Posting...');
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/tweet`, {
-                username: user,
                 content: tweet
-            });
+            },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
             const fileInput = document.getElementById('uploadfile');
             const file = fileInput.files[0];
@@ -88,7 +92,7 @@ function FollowingPosts() {
     return (<div>
         <div className='pt-[55px]' >
             <div className='flex items-center p-2'>
-                <img src={`https://ui-avatars.com/api/?name=${user}`} className='rounded-full h-8' />
+                <img src={`https://ui-avatars.com/api/?name=${username}`} className='rounded-full h-8' />
                 <textarea placeholder="What is happening?!" className=" p-2 h-10 focus:outline-none bg-inherit w-full resize-none text-lg" onInput={autoResize}
                     onChange={(e) => settweet(e.target.value)} value={tweet} />
             </div>

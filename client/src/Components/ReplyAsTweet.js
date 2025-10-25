@@ -5,10 +5,9 @@ import Reply from "./Reply";
 import { useLocation } from 'react-router-dom';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import UserContext from '../Context/UserContext';
 import toast, { Toaster } from 'react-hot-toast';
 import ReplyAsPost from "./ReplyAsPost";
+import useUserStore from "../store/userStore";
 
 function ReplyAsTweet() {
     const [replies, setreplies] = useState([]);
@@ -16,8 +15,9 @@ function ReplyAsTweet() {
     const Currreply = location.state.reply;
     const [showbtn, setshowbtn] = useState(false);
     const navigate = useNavigate();
-    const { user, setUser } = useContext(UserContext);
+    const { username,isAuthenticated,clearUser,userid } = useUserStore();
     const [reply, setReply] = useState('');
+    const token = localStorage.getItem("token");
 
     async function getReplies() {
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/replyReplies`, {
@@ -43,9 +43,12 @@ function ReplyAsTweet() {
         toast.promise(
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/addReplyReply`, {
                 reply_id: Currreply._id,
-                username: user,
                 content: reply
-            }).then(response => {
+            },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(response => {
                 setreplies([...replies, response.data]);
                 setReply('');
             }),
@@ -64,7 +67,7 @@ function ReplyAsTweet() {
         </div>
         <ReplyAsPost reply={Currreply} />
         <div className="border-[1px] border-[#2F3336] flex items-center pr-1">
-            <img src={`https://ui-avatars.com/api/?name=${user}`} className='rounded-full h-8' />
+            <img src={`https://ui-avatars.com/api/?name=${username}`} className='rounded-full h-8' />
             <textarea placeholder="Post Your Reply" className=" p-2 h-10 focus:outline-none bg-inherit w-full resize-none" onInput={autoResize}
                 value={reply} onChange={(e) => { setReply(e.target.value) }} />
             <button className="p-1 pl-2 pr-2 rounded-lg bg-[#1C9BEF] h-8 flex-shrink-0" onClick={PostTheReply}>Reply</button>

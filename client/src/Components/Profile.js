@@ -4,11 +4,10 @@ import Post from '../Components/Post';
 import { useEffect } from "react";
 import ReplyAsPost from "./ReplyAsPost";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useContext } from 'react';
-import UserContext from '../Context/UserContext';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdVerified } from "react-icons/md";
 import { ColorRing } from 'react-loader-spinner';
+import useUserStore from "../store/userStore";
 
 function Profile() {
     const location = useLocation();
@@ -16,12 +15,13 @@ function Profile() {
     const [tweets, setTweets] = useState([]);
     const [showreplies, setShowreplies] = useState(false);
     const [replies, setReplies] = useState([]);
-    const { user, setUser } = useContext(UserContext);
+    const { username,isAuthenticated,clearUser,userid } = useUserStore();
     const [Following, setFollowing] = useState(false);
     const [followersList, setfollowersList] = useState([]);
     const [followingList, setfollowingList] = useState([]);
     const [verified, setVerified] = useState(false);
     const [loading, setloading] = useState(true);
+    const token = localStorage.getItem("token");
 
     const navigate = useNavigate();
 
@@ -56,8 +56,11 @@ function Profile() {
 
     async function followHim() {
         const response = axios.post(`${process.env.REACT_APP_BACKEND_URL}/followAccount`, {
-            username: user,
             creator: user_
+        },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         })
         setFollowing(true);
         window.location.reload();
@@ -65,8 +68,11 @@ function Profile() {
 
     async function unfollowHim() {
         const response = axios.post(`${process.env.REACT_APP_BACKEND_URL}/unfollowAccount`, {
-            username: user,
             creator: user_
+        },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         })
         setFollowing(false);
         window.location.reload();
@@ -75,9 +81,12 @@ function Profile() {
     async function isFollowing() {
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/isFollowed`, {
-                username: user,
                 creator: user_
-            })
+            },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             if (response.status == 200) setFollowing(true);
         } catch (e) { }
     }
@@ -140,8 +149,8 @@ function Profile() {
                         <div>{user_}</div>
                         {verified && <MdVerified />}
                     </div>
-                    {!Following && user != user_ && <button onClick={followHim}>Follow</button>}
-                    {Following && user != user_ && <button onClick={unfollowHim}>Following</button>}
+                    {!Following && username != user_ && <button onClick={followHim}>Follow</button>}
+                    {Following && username != user_ && <button onClick={unfollowHim}>Following</button>}
                     <div onClick={displayfollowers}>{followersList.length} followers</div>
                     <div onClick={displayfollowings}>{followingList.length} following</div>
                 </div>

@@ -2,10 +2,9 @@ import { io } from "socket.io-client";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Message from "./Messaage";
-import { useContext } from 'react';
-import UserContext from '../Context/UserContext';
 import axios from 'axios';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import useUserStore from "../store/userStore";
 
 function DMroom() {
     const SOCKET_SERVER_URL = `${process.env.REACT_APP_BACKEND_URL}`;
@@ -14,7 +13,7 @@ function DMroom() {
     const roomData = location.state;
     const [enteredValue, setEnteredValue] = useState('');
     const [messages, setMessages] = useState([]);
-    const { user, setUser } = useContext(UserContext);
+    const { username,isAuthenticated,clearUser,userid } = useUserStore();
     const navigate = useNavigate();
 
     const renderMessages = messages.map((msg, index) => {
@@ -39,7 +38,7 @@ function DMroom() {
         return () => {
             socket.disconnect();
         };
-    }, [roomData.room, user]);
+    }, [roomData.room, username]);
 
     async function getHistory() {
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/roomMessages`, {

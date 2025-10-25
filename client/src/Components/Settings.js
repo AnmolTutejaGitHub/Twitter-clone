@@ -1,16 +1,12 @@
-import { useContext } from 'react';
-import UserContext from '../Context/UserContext';
 import { IoPersonOutline } from "react-icons/io5";
 import { FaKey } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineLogout } from "react-icons/ai";
-import { useDispatch } from 'react-redux';
-import { clearUser } from '../redux/actions/userActions';
+import useUserStore from "../store/userStore";
 
 function Settings() {
-    const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+     const { username,isAuthenticated,clearUser,userid } = useUserStore();
 
     // function logout() {
     //     localStorage.removeItem('token');
@@ -19,9 +15,7 @@ function Settings() {
     // }
 
     function logout() {
-        localStorage.removeItem('token');
-        dispatch(clearUser());
-        sessionStorage.removeItem('user');
+        clearUser();
         navigate('/');
     }
 

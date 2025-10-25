@@ -1,16 +1,17 @@
 import Post from './Post';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import UserContext from '../Context/UserContext';
 import toast, { Toaster } from 'react-hot-toast';
 import { RiGalleryFill } from "react-icons/ri";
 import axios from 'axios';
+import useUserStore from "../store/userStore";
 
 function Quote() {
     const [quote, setQuote] = useState('');
     const location = useLocation();
     const tweet = location.state.tweet;
-    const { user, setUser } = useContext(UserContext);
+    const { username,isAuthenticated,clearUser,userid } = useUserStore();
+    const token = localStorage.getItem("token");
 
     function autoResize(e) {
         e.target.style.height = 'auto';
@@ -22,13 +23,16 @@ function Quote() {
         let url = '';
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/tweet`, {
-                username: user,
                 content: quote,
                 isQuote: {
                     _bool: true,
                     parent: tweet
                 }
-            });
+            },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
             const fileInput = document.getElementById('uploadfile');
             const file = fileInput.files[0];

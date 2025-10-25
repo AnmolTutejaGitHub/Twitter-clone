@@ -1,8 +1,7 @@
-import { useContext } from 'react';
-import UserContext from '../Context/UserContext';
+import useUserStore from "../store/userStore";
 
-function Message({ _key, timestamp, username, msg }) {
-    const { user, setUser } = useContext(UserContext);
+function Message({ _key, timestamp, username_, msg }) {
+    const { username,isAuthenticated,clearUser,userid } = useUserStore();
     const urlRegex = /(https?:\/\/[^\s]+)/g;
 
     const parseMessage = (message) => {
@@ -14,10 +13,10 @@ function Message({ _key, timestamp, username, msg }) {
         });
     };
     return (
-        <div className={`flex ${username == user ? `justify-end` : `justify-start`}`}>
+        <div className={`flex ${username_ == username ? `justify-end` : `justify-start`}`}>
             <div className="" key={_key}>
                 <div className='flex flex-col'>
-                    <div className={`${username == user ? `bg-[#1C9BEF]` : `bg-[#2F3336]`} p-2 inline-block overflow-hidden break-words rounded-lg text-center`}>
+                    <div className={`${username_ == username ? `bg-[#1C9BEF]` : `bg-[#2F3336]`} p-2 inline-block overflow-hidden break-words rounded-lg text-center`}>
                         {parseMessage(msg)}
                     </div>
                     <div className="text-[#71767A] text-[12px]" >{timestamp}</div>

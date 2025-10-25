@@ -1,24 +1,28 @@
-import { useContext, useState } from 'react';
-import UserContext from '../Context/UserContext';
+import { useState } from 'react';
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import useUserStore from "../store/userStore";
 
 function ChangePassword() {
-    const { user, setUser } = useContext(UserContext);
+   const { username,isAuthenticated,clearUser,userid } = useUserStore();
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const notify = (text) => toast.success(text);
     const notifyErr = (text) => toast.error(text);
+    const token = localStorage.getItem("token");
 
     async function changePassword() {
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/changepassword`, {
-                username: user,
                 newPassword,
                 oldPassword
-            })
+            },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             if (response.status === 200) notify("password changed successfully");
             else notify("Wrong Credentials");
         } catch (e) {

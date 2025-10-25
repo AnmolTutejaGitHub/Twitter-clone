@@ -5,8 +5,10 @@ import Home from '../Home/Home';
 import './App.css';
 import toast, { Toaster } from 'react-hot-toast';
 import Signup from '../Signup';
-import OTPValidation from '../OTPValidation';
 import ForgetPassword from '../ForgetPassword';
+import GetVerified from '../GetVerified';
+import VerifyYourAccount from '../VerifyYourAccount';
+import ResetPassword from '../ResetPassword';
 
 function App() {
     return (
@@ -16,9 +18,11 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="/home/*" element={<Home />} />
-                    <Route path="/signup" element={<Signup />} />
-                    <Route path="/OTPValidation" element={<OTPValidation />}></Route>
-                    <Route path="forgetpassword" element={<ForgetPassword />} />
+                   <Route path="/signup" element={<Signup/>}/>
+                    <Route path="/verify" element={<GetVerified/>} />
+                    <Route path="/verify-email/:token" element={<VerifyYourAccount/>} />
+                    <Route path="/forget-password" element={<ForgetPassword/>} />
+                    <Route path="/update-password/:token" element={<ResetPassword/>} />
                 </Routes>
             </BrowserRouter>
         </div>

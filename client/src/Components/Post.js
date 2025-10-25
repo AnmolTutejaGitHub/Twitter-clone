@@ -4,8 +4,7 @@ import { FaRegHeart } from "react-icons/fa6";
 import { IoShareSocialOutline } from "react-icons/io5";
 import { CiBookmark } from "react-icons/ci";
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import UserContext from '../Context/UserContext';
+import useUserStore from "../store/userStore";
 import axios from 'axios';
 import { useState } from "react";
 import { IoMdHeart } from "react-icons/io";
@@ -15,9 +14,10 @@ import { IoMdBookmark } from "react-icons/io";
 function Post({ tweet }) {
 
     const navigate = useNavigate();
-    const { user, setUser } = useContext(UserContext);
+    const { username,isAuthenticated,clearUser,userid } = useUserStore();
     const [isLiked, setLiked] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
+    const token = localStorage.getItem("token");
 
     function formatTime(createdTime) {
         const currTime = new Date();
@@ -49,7 +49,10 @@ function Post({ tweet }) {
     async function LikeThePost() {
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/like`, {
             tweet_id: tweet._id,
-            username: user
+        },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         });
         setLiked(true);
         tweet.likes += 1;
@@ -58,7 +61,10 @@ function Post({ tweet }) {
     async function unLikeThePost() {
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/unlike`, {
             tweet_id: tweet._id,
-            username: user
+        },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         });
         setLiked(false);
         tweet.likes -= 1;
@@ -68,8 +74,11 @@ function Post({ tweet }) {
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/wasTweetLiked`, {
                 post_id: tweet._id,
-                username: user
-            })
+            },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             if (response.status == 200) setLiked(true);
         } catch (e) { }
     }
@@ -77,8 +86,11 @@ function Post({ tweet }) {
     async function BookmarkTweet(e) {
         e.stopPropagation();
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/addBookmark`, {
-            username: user,
             tweet_id: tweet._id
+        },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         })
         setIsBookmarked(true);
     }
@@ -86,8 +98,11 @@ function Post({ tweet }) {
     async function unBookmarkTweet(e) {
         e.stopPropagation();
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/deleteBookmark`, {
-            username: user,
             tweet_id: tweet._id
+        },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         })
         setIsBookmarked(false);
     }
@@ -95,9 +110,12 @@ function Post({ tweet }) {
     async function isBookedmarked() {
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/isBookedmark`, {
-                username: user,
                 tweet_id: tweet._id
-            })
+            },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             if (response.status == 200) setIsBookmarked(true);
         } catch (e) {
             console.log(e);

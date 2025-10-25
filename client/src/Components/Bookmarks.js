@@ -1,20 +1,21 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useContext } from 'react';
-import UserContext from '../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { ColorRing } from 'react-loader-spinner';
+import useUserStore from "../store/userStore";
 
 function Bookmarks() {
     const [bookmarks_id, setBookmarks_id] = useState([]);
-    const { user, setUser } = useContext(UserContext);
+    const { username,isAuthenticated,clearUser,userid } = useUserStore();
     const navigate = useNavigate();
     const [loading, setloading] = useState(true);
+    const token = localStorage.getItem("token");
     async function getBookmarks() {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getBookmarks`, {
-                username: user
-            });
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/getBookmarks`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }});
             setBookmarks_id(response.data);
             console.log(response.data);
             setloading(false);

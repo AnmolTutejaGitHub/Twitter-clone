@@ -18,34 +18,17 @@ import Explore from '../Explore';
 import Notifications from '../Notifications';
 import PostModel from '../PostModel';
 import FolloowersFollowingList from '../FollowersFollowingList';
-import { useContext, useEffect, useState } from 'react';
-import UserContext from '../../Context/UserContext';
+import {  useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaBars } from "react-icons/fa";
-import { useDispatch } from 'react-redux';
-import { clearUser } from '../../redux/actions/userActions';
+import useUserStore from "../../store/userStore";
 
 function Home() {
-    const { user, setUser } = useContext(UserContext);
+   const { username,isAuthenticated,clearUser,userid } = useUserStore();
     const navigate = useNavigate();
     const [sidebarvisib, setsidebarvisib] = useState(false);
-    const dispatch = useDispatch();
 
     function barsclicked() {
         setsidebarvisib(!sidebarvisib);
-    }
-
-    useEffect(() => {
-        if (!user) {
-            logout();
-        }
-    }, [user]);
-
-    function logout() {
-        localStorage.removeItem('token');
-        dispatch(clearUser());
-        sessionStorage.removeItem('user');
-        navigate('/');
     }
 
     return (

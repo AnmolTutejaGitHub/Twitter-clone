@@ -1,17 +1,17 @@
-import { useContext } from 'react';
-import UserContext from '../Context/UserContext';
 import { IoIosArrowRoundBack } from "react-icons/io";
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import useUserStore from "../store/userStore";
 
 function AccountInformation() {
-    const { user, setUser } = useContext(UserContext);
+   const { username,isAuthenticated,clearUser,userid } = useUserStore();
     const [userObj, setUserObj] = useState({});
+   const token = localStorage.getItem("token");
 
     async function getUser() {
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getUser`, {
-            username: user
-        });
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getUser`,{
+            username  : username
+    });
         setUserObj(response.data);
     }
 
@@ -27,7 +27,7 @@ function AccountInformation() {
         <div className=''>
             <div className=' hover:bg-[#16181C] p-2 pl-4'>
                 <div>Username</div>
-                <div className='text-[#71767A] text-[14px]'>@{user}</div>
+                <div className='text-[#71767A] text-[14px]'>@{username}</div>
             </div>
             <div className=' hover:bg-[#16181C] p-2 pl-4'>
                 <div>Email</div>

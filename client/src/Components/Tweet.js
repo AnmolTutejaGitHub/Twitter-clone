@@ -5,9 +5,8 @@ import Reply from "./Reply";
 import { useLocation } from 'react-router-dom';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import UserContext from '../Context/UserContext';
 import toast, { Toaster } from 'react-hot-toast';
+import useUserStore from "../store/userStore";
 
 function Tweet() {
     const [replies, setreplies] = useState([]);
@@ -15,8 +14,9 @@ function Tweet() {
     const tweet = location.state.tweet;
     const [showbtn, setshowbtn] = useState(false);
     const navigate = useNavigate();
-    const { user, setUser } = useContext(UserContext);
+   const { username,isAuthenticated,clearUser,userid } = useUserStore();
     const [reply, setReply] = useState('')
+    const token = localStorage.getItem("token");
 
     async function getReplies() {
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/tweetReplies`, {
@@ -27,7 +27,7 @@ function Tweet() {
 
     useEffect(() => {
         getReplies();
-    }, [replies])
+    },[])
 
     const renderReplies = replies.map((reply) => {
         return <Reply reply={reply} />
@@ -42,9 +42,12 @@ function Tweet() {
         toast.promise(
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/addTweetreply`, {
                 tweet_id: tweet._id,
-                username: user,
                 content: reply
-            }).then(response => {
+            },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(response => {
                 setreplies([...replies, response.data]);
                 setReply('');
             }),
@@ -63,7 +66,7 @@ function Tweet() {
         </div>
         <Post tweet={tweet} />
         <div className="border-[1px] border-[#2F3336] flex items-center pr-1">
-            <img src={`https://ui-avatars.com/api/?name=${user}`} className='rounded-full h-8' />
+            <img src={`https://ui-avatars.com/api/?name=${username}`} className='rounded-full h-8' />
             <textarea placeholder="Post Your Reply" className=" p-2 h-10 focus:outline-none bg-inherit w-full resize-none" onInput={autoResize}
                 value={reply} onChange={(e) => { setReply(e.target.value) }} />
             <button className="p-1 pl-2 pr-2 rounded-lg bg-[#1C9BEF] h-8 flex-shrink-0" onClick={PostTheReply}>Reply</button>

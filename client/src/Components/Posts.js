@@ -4,15 +4,14 @@ import FollowingPosts from './FollowingPosts';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useContext } from 'react';
-import UserContext from '../Context/UserContext';
+import useUserStore from "../store/userStore";
 import axios from 'axios';
 
 function Posts() {
     const [curr, setCurr] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
-    const { user, setUser } = useContext(UserContext);
+    const { username,isAuthenticated,clearUser,userid } = useUserStore();
 
     useEffect(() => {
         if (location.pathname.includes('allposts')) {

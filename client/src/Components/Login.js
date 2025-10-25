@@ -1,87 +1,128 @@
-import { useContext, useState, useEffect } from 'react';
-import UserContext from '../Context/UserContext';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import { Blocks } from 'react-loader-spinner'
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import useUserStore from "../store/userStore";
 import { RiTwitterXFill } from "react-icons/ri";
-import { useDispatch } from 'react-redux';
-import { setUser } from './../redux/actions/userActions';
-import ClipLoader from "react-spinners/ClipLoader";
 
 function Login() {
-    const [EnteredUser, setEnteredUser] = useState('');
-    const [EnteredEmail, setEnteredEmail] = useState('');
-    const [EnteredPassword, setEnteredPassword] = useState('');
-    const [Error, setError] = useState('');
-    const { user, loading } = useContext(UserContext);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const [loginLoader, setLoginLoader] = useState(false);
+  const navigate = useNavigate();
+  const { isAuthenticated, setUser } = useUserStore();
 
-    useEffect(() => {
-        if (user) navigate('/home/posts/allposts');
-    }, [user])
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-    async function handleLogin() {
-        try {
-            setLoginLoader(true);
-            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
-                name: EnteredUser,
-                email: EnteredEmail,
-                password: EnteredPassword,
-            });
-
-            if (response.status === 200) {
-                const token = response.data.token;
-                const EnteredUser = response.data.user;
-                localStorage.setItem('token', token);
-                sessionStorage.setItem('user', EnteredUser);
-                dispatch(setUser(EnteredUser));
-                navigate('/OTPValidation', { state: { email: EnteredEmail } });
-            }
-        } catch (error) {
-            setError(error?.response?.data?.error || "Some error Occurred");
-        } finally {
-            setLoginLoader(false);
-        }
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/home/posts/allposts");
     }
+  }, [isAuthenticated]);
 
+  async function handleLogin() {
+    const id = toast.loading("Trying to login...");
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/login`,
+        {
+          name: username,
+          email: email,
+          password: password,
+        }
+      );
 
-    return (
-        <div className="flex justify-center items-center">
-            {loading &&
-                <div className="flex justify-center items-center h-[100v] w-full">
-                    <Blocks
-                        height="100"
-                        width="100"
-                        color="#4fa94d"
-                        ariaLabel="blocks-loading"
-                        wrapperStyle={{}}
-                        wrapperClass="blocks-wrapper"
-                        visible={true}
-                    />
-                </div>
-            }
+      console.log(response.data);
+      toast.success("Login successful");
 
+      const { token, username: userName, user_id } = response.data;
+      setUser(userName, user_id);
+      localStorage.setItem("token", token);
+      navigate("/home/posts/allposts");
+    } catch (err) {
+      console.log(err);
+      const errMsg =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        "Some error occurred";
+      setError(errMsg);
+      toast.error(errMsg);
+    } finally {
+      toast.dismiss(id);
+    }
+  }
 
-            {!loading &&
-                <div className='mt-[12%] w-[400px]'>
-                    <form className='p-[2rem] rounded-[5px] flex gap-[1rem] flex-col' onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
-                        <div className='flex items-center gap-2 pl-2'> <p className='text-[35px] font-bold'>Sign in to</p><RiTwitterXFill className='text-[35px] font-bold' /></div>
-                        <input placeholder="Enter Username" onChange={(e) => { setEnteredUser(e.target.value) }} className='p-[0.6rem] outline-none w-full bg-inherit border-[1.7px] border-[#333639] focus:border-[#1C9BEF] placeholder:text-[#71767A]' required></input>
-                        <input placeholder="Enter Email" onChange={(e) => { setEnteredEmail(e.target.value) }} className='p-[0.6rem] outline-none w-full bg-inherit border-[1.7px] border-[#333639] focus:border-[#1C9BEF] placeholder:text-[#71767A]' required></input>
-                        <input placeholder="Enter Password" onChange={(e) => { setEnteredPassword(e.target.value) }} className='p-[0.6rem] outline-none w-full bg-inherit border-[1.7px] border-[#333639] focus:border-[#1C9BEF] placeholder:text-[#71767A]' required></input>
-                        <div><Link to="/forgetpassword" className='text-[#1C9BEF]'>Forget Password?</Link></div>
-                        <p>Don't have an Account ? <span><Link to="/signup" className='text-[#1C9BEF]'>Signup</Link></span></p>
-                        <button type="submit" className={`p-2 bg-sky-600 rounded-sm ${loginLoader ? 'pt-1 pb-1 cursor-not-allowed bg-sky-800' : ''}`}>{loginLoader ?
-                            <ClipLoader
-                                color={'#fff'}
-                                aria-label="Loading Spinner"
-                                data-testid="loader"
-                            /> : 'login'}</button>
-                        {Error && <p className='text-red-600'>*{Error}</p>}
-                    </form>
-                </div>}
-        </div>);
+  return (
+    <section className="flex items-center justify-center bg-[#000000] h-[100vh] w-[100vw]">
+      <div className="mt-[12%] w-[400px]">
+        <form
+          className="p-[2rem] rounded-[5px] flex gap-[1rem] flex-col bg-[#000000] shadow-xl"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLogin();
+          }}
+        >
+          <div className="flex items-center gap-2 pl-2">
+            <p className="text-[35px] font-bold text-[#FFFFFF]">Sign in to</p>
+            <RiTwitterXFill className="text-[35px] font-bold text-[#FFFFFF]" />
+          </div>
+
+          <input
+            placeholder="Enter Username"
+            onChange={(e) => setUsername(e.target.value)}
+            className="p-[0.6rem] outline-none w-full bg-gray-100 text-black border-[1.7px] border-[#333639] focus:border-[#0584C7] placeholder:text-gray-600 rounded-lg"
+            required
+          />
+
+          <input
+            placeholder="Enter Email"
+            type="email"
+            onChange={(e) => setEmail(e.target.value)}
+            className="p-[0.6rem] outline-none w-full bg-gray-100 text-black border-[1.7px] border-[#333639] focus:border-[#0584C7] placeholder:text-gray-600 rounded-lg"
+            required
+          />
+
+          <input
+            placeholder="Enter Password"
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+            className="p-[0.6rem] outline-none w-full bg-gray-100 text-black border-[1.7px] border-[#333639] focus:border-[#0584C7] placeholder:text-gray-600 rounded-lg"
+            required
+          />
+
+          <div>
+            <Link
+              to="/forget-password"
+              className="text-[#0584C7] hover:underline"
+            >
+              Forget Password?
+            </Link>
+          </div>
+
+          <p className="text-[#F9F1F1]">
+            Don't have an Account?{" "}
+            <span>
+              <Link
+                to="/signup"
+                className="text-[#0584C7] font-semibold hover:underline"
+              >
+                Signup
+              </Link>
+            </span>
+          </p>
+
+          <button
+            type="submit"
+            className="p-2 bg-[#0584C7] hover:bg-[#0584C7]/70 text-white rounded-lg text-lg font-semibold"
+          >
+            Login
+          </button>
+
+          {error && <p className="text-red-500 text-sm">*{error}</p>}
+        </form>
+      </div>
+    </section>
+  );
 }
-export default Login; 
+
+export default Login;
